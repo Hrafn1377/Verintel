@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Verintel - Browse verified jobs{% endblock %}
+
+{%block content %}
+<section class="jobs-header">
+    <h1>Verified job postings</h1>
+    <p>Every listing has been scored. Red flags are shown upfront.</p>
+</section>
+
+<section class="jobs-filters">
+    <form hx-get="/jobs"
+          hx-target="#jobs-list"
+          hx-swap="innerHTML"
+          hx-trigger="change, keyup delay:400ms">
+        <input type="text"
+               name="q"
+               placeholder="Search jobs..."
+               value="{{ query or '' }}">
+        <select name="country">
+            <option value="">All countries</option>
+            <option value="us" {{ 'selected' if country == 'us' }}>United States</option>
+            <option value="gb" {{ 'selected' if country == 'gb' }}>United Kingdom</option>
+            <option value="ca" {{ 'selected' if country == 'ca' }}>Canada</option>
+            <option value="au" {{ 'selected' if country == 'au' }}>Australia</option>
+        </select>
+        <select name="verdict">
+            <option value="">All verdicts</option>
+            <option value="pass" {{ 'selected' if verdict == 'pass' }}>Verified only</option>
+            <option value="warn" {{ 'selected' if verdict == 'warn' }}>Warnings</option>
+            <option value="fail" {{ 'selected' if verdict == 'fail' }}>Flagged</option>
+        </select>  
+    </form>
+</section>
+
+<div id="jobs-list">
+    {% include "partials/jobs_list.html" %}
+</div>
+{% endblock %}

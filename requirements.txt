@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+httpx
+playwright
+playwright-stealth
+python-whois
+phonenumbers
+spacy
+jinja2--3.1.4
+python-multipart

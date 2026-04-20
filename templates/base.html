@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Verintel{% endblock %}</title>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">Verintel</a>
+            <ul>
+                <li><a href="/jobs">Jobs</a></li>
+                <li><a href="/verify">Verify</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>Verintel &mdash; protecting job seekers since 2026</p>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{{ job.title }} — Verintel{% endblock %}
+
+{% block content %}
+<div class="job-detail">
+    <div class="job-detail-header">
+        <div class="job-detail-title">
+            <a href="/jobs" class="back-link">&larr; Back to jobs</a>
+            <h1>{{ job.title }}</h1>
+            <span class="job-company">{{ job.company_name }}</span>
+        </div>
+        <div class="job-card-score">
+            <span class="score-badge score-badge--{{ job.verdict }}">
+                {% if job.verdict == 'pass' %}Verified
+                {% elif job.verdict == 'warn' %}Warning
+                {% else %}Flagged
+                {% endif %}
+            </span>
+            <span class="score-number score-number--{{ job.verdict }}">
+                {{ (job.overall_score * 100) | int }}%
+            </span>
+        </div>
+    </div>
+
+    <div class="job-detail-body">
+        <div class="job-detail-main">
+            <div class="job-posting-text">
+                <h2>Job posting</h2>
+                <p>{{ job.body }}</p>
+            </div>
+        </div>
+
+        <div class="job-detail-sidebar">
+            {% include "partials/trust_report.html" with context %}
+        </div>
+    </div>
+</div>
+{% endblock %}

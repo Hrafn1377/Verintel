@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Verintel - Find legitimate jobs{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Find jobs you can trust</h1>
+    <p>Every job posting on Verintel is scored and verified. We flag fake companies, fraudulent recruiters, and scam postings so you don't have to.</p>
+    <a href="/jobs" class="btn">Browse verified jobs</a>
+</section>
+
+<section class="verify-cta">
+    <h2>Verify a job posting</h2>
+    <p>Found a posting elsewhere? Paste it here and we'll score it.</p>
+    <form hx-post="/verify/posting"
+          hx-target="#verify-result"
+          hx-swap="innerHTML"
+          hx-indicator="#verify-spinner">
+        <textarea name="posting_text"
+                  placeholder="Paste the full job posting here..."
+                  rows="6"
+                  required></textarea>
+        <input type="text" name="company_name" placeholder="Company name" required>
+        <input type="text" name="domain" placeholder="Company website (e.g., acme.com)" required>
+        <input type="text" name="claimed_country" placeholder="Country (e.g., us, gb)" value="us">
+        <button id="verify-spinner" class="htmx-indicator">Checking...</button>          
+    </form>
+    <div id="verify-result"></div>
+</section>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% if jobs %}
+    {% for job in jobs %}
+    <div class="job-card job-card--{{ job.verdict }}">
+        <div class="job-card-header">
+            <div class="job-card-title">
+                <h2><a href="/jobs/{{ job.id }}">{{ job.title }}</a></h2>
+                <span class="job-company">{{ job.company_name }}</span>
+            </div>
+            <div class="job-card-score">
+                <span class="score-badge score-badge--{{ job.verdict }}">
+                    {% if job.verdict == 'pass' %}Verified
+                    {% elif job.verdict == 'warn' %}Warning
+                    {% else %}Flagged
+                    {% endif %}
+                </span>
+                <span class="score-number score-number--{{ job.verdict }}">
+                    {{ (job.overall_score * 100) | int }}%
+                </span>
+            </div>
+        </div>
+
+        <p class="job-summary">{{ job.summary }}</p>
+
+        {% if job.verdict != 'pass' %}
+        <div class="job-flags">
+            {% for signal in job.signals %}
+                {% if signal.verdict != 'pass' %}
+                <span class="flag flag--{{ signal.verdict }}">{{ signal.label }}</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="job-meta">
+            <span>{{ job.claimed_country | upper }}</span>
+            <span>{{ job.domain }}</span>
+            <a href="/jobs/{{ job.id }}" class="job-link">View full report</a>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <p>No jobs found matching your filters.</p>
+    </div>
+{% endif %}
