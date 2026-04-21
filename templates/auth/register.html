@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Create account - Verintel{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <h1>Create your account</h1>
+        <p>Join Verintel and find jobs you can trust.</p>
+
+        {% if error %}
+        <div class="auth-error">{{ error }}</div>
+        {% endif %}
+
+        {% if success %}
+        <div class="auth-success">{{ success }}</div>
+        {% endif %}
+
+        <form method="post" action="/auth/register">
+            <input type="text"
+                   name="display_name"
+                   placeholder="Your name"
+                   required
+                   autocomplete="name">
+            <input type="email"
+                   name="email"
+                   placeholder="Email address"
+                   required
+                   autocomplete="email">
+            <input type="password"
+                   name="password"
+                   placeholder="Password"
+                   required
+                   autocomplete="new-password"
+                   minlength="8">
+            <button type="submit">Create account</button>       
+        </form>
+
+        <p class="auth-link">Already have an account? <a href="/auth/login">Sign in</a></p>
+    </div>
+</div>
+{% endblock %}

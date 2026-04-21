@@ -539,3 +539,201 @@ button[type="submit"]:hover {
         flex-direction: column;
     }
 }
+
+/* auth pages */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    padding: 4rem 1rem;
+}
+
+.auth-card {
+    background: var(--color-surface);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    width: 100%;
+    max-width: 420px;
+}
+
+.auth-card h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.auth-card > p {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    margin-bottom: 1.5rem;
+}
+
+.auth-error {
+    background: var(--color-fail-bg);
+    color: var(--color-fail);
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    margin-bottom: 1rem;
+    border: 0.5px solid var(--color-fail);
+}
+
+.auth-success {
+    background: var(--color-pass-bg);
+    color: var(--color-pass);
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    margin-bottom: 1rem;
+    border: 0.5px solid var(--color-pass);
+}
+
+.auth-link {
+    text-align: center;
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-top: 1.5rem;
+}
+
+.auth-link a {
+    color: var(--color-text);
+    text-decoration: underline;
+}
+
+.auth-link a:hover {
+    color: var(--color-text-muted);
+}
+
+.nav-btn {
+    background: none;
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 6px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--color-text-muted);
+    cursor: pointer;
+}
+
+.nav-btn:hover {
+    color: var(--color-text);
+    background: var(--color-bg);
+}
+
+/* profile page */
+.profile-page {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 0.5px solid var(--color-border);
+}
+
+.profile-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--color-pass-bg);
+    color: var(--color-pass);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.profile-info h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.profile-headline {
+    font-size: 15px;
+    color: var(--color-text-muted);
+    margin-bottom: 6px;
+}
+
+.profile-meta {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    display: flex;
+    gap: 16px;
+}
+
+.profile-meta a {
+    color: var(--color-text-muted);
+    text-decoration: underline;
+}
+
+.github-prompt {
+    background: var(--color-pass-bg);
+    border: 0.5px solid var(--color-pass);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    font-size: 14px;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.github-prompt p {
+    color: var(--color-pass);
+    margin: 0;
+}
+
+.github-prompt a {
+    color: var(--color-pass);
+    font-weight: 500;
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
+.profile-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 0.5px solid var(--color-border);
+}
+
+.profile-section h2 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.location-field {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.location-field input {
+    flex: 1;
+}
+
+.location-btn {
+    padding: 10px 14px;
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-family: inherit;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.location-btn:hover {
+    background: var(--color-bg);
+    color: var(--color-text);
+}

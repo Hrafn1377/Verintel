@@ -15,6 +15,15 @@
                 <li><a href="/jobs">Jobs</a></li>
                 <li><a href="/verify">Verify</a></li>
                 <li><a href="/about">About</a></li>
+                {% if user %}
+                <li><a href="/profile">Profile</a></li>
+                <form method="post" action="/auth/logout" style="display:inline">
+                    <button type="submit" class="nav-btn">Sign out</button>
+                </form>
+                {% else %}
+                <li><a href="/auth/login">Sign in</a></li>
+                <li><a href="/auth/register">Join</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>

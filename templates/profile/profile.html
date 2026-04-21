@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}{{ profile.display_name or 'Profile' }} - Verintel{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+    <div class="profile-header">
+        <div class="profile-avatar">
+            {{ (profile.display_name or user.email)[0].upper() }}
+        </div>
+        <div class="profile-info">
+            <h1>{{ profile.display_name or 'Your profile' }}</h1>
+            <p class="profile-header">{{ profile.headline or 'Add a headline' }}</p>
+            <p class="profile-meta">
+                {% if profile.location %}
+                <span>{{ profile.location }}</span>
+                {% endif %}
+                {% if profile.website %}
+                <a href="{{ profile.website }}" target="_blank">{{ profile.website }}</a>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    {% if not profile.github_prompted %}
+    <div class="github-prompt">
+        <p>Many recruiters look for GitHub activity - adding your username take 30 seconds.</p>
+        <a href="#edit-profile">Add GitHub username</a>
+    </div>
+    {% endif %}
+
+    {% if profile.bio %}
+    <div class="profile-section">
+        <h2>About</h2>
+        <p>{{ profile.bio }}</p>
+    </div>
+    {% endif %}
+
+    <div class="profile-section" id="edit-profile">
+        <h2>Edit profile</h2>
+        <form method="post" action="/profile/update">
+            <input type="text"
+                   name="display_name"
+                   placeholder="Your name"
+                   value="{{ profile.display_name or '' }}">
+            <input type="text"
+                   name="headline"
+                   placeholder="Headline (e.g., Frontend Developer)"
+                   value="{{ profile.headline or '' }}">
+            <textarea name="bio"
+                      placeholder="A short bio..."
+                      rows="4">{{ profile.bio or '' }}</textarea>
+            <div class="location-field">
+                <input type="text"
+                       name="location"
+                       id="location-input"
+                       placeholder="Location (e.g. Bristol, TN)"
+                       value="{{ profile.location or '' }}">
+            <button type="button" class="location-btn" onclick="getLocation()">Use my location</button>
+        </div>
+            <input type="text"
+                   name="website"
+                   placeholder="Website (e.g., https://yoursite.com)"
+                   value="{{ profile.website or '' }}">
+            <input type="text"
+                   name="github_username"
+                   placeholder="GitHub username"
+                   value="{{ profile.github_username or '' }}">
+            <button type="submit">Save profile</button>       
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function getLocation() {
+        if (!navigator.geolocation) {
+            alert("Geolocation is not supported by your browser.");
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(
+            async function(position) {
+                const lat = position.coords.latitude
+                const lon = position.coords.longitude
+                try {
+                    const r = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
+                        { headers: { "Accept-Language": "en" } }
+                    );
+                    const data = await r.json();
+                    const city = data.address.city
+                        || data.address.town
+                        || data.address.village
+                        || "";
+                    const state = data.address.state || "";
+                    const country = data.address.country_code?.toUpperCase() || "";
+                    const location = [city, state, country].filter(Boolean).join(", ");
+                    document.getElementById("location-input").value = location;
+                } catch {
+                    alert("Could not determine your location. Please enter it manually.");
+                }
+            },
+            function() {
+                alert("Location access was denied. Please enter your location manually.");
+            }
+        );
+    }
+</script>
+{% endblock %}
