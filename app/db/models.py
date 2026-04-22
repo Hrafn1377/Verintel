@@ -82,3 +82,24 @@ class TrustScore(Base):
     signals = Column(JSON)
     summary = Column(String)
     created_at = Column(DateTime, server_default=func.now())
+
+
+class EmployerReview(Base):
+    __tablename__ = "employer_reviews"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False)
+    company_name = Column(String, nullable=False)
+    company_domain = Column(String, nullable=True)
+    rating = Column(Float, nullable=False)
+    title = Column(String, nullable=False)
+    body = Column(Text, nullable=False)
+    role = Column(String, nullable=True)
+    employment_status = Column(String, nullable=True)
+    pros = Column(Text, nullable=True)
+    cons = Column(Text, nullable=True)
+    verified = Column(Boolean, default=False)
+    flagged = Column(Boolean, default=False)
+    created_at = Column(DateTime, server_default=func.now())
+
+    user = relationship("User", backref="reviews")    

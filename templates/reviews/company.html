@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}{{ company_name }} reviews — Verintel{% endblock %}
+
+{% block content %}
+<div class="reviews-page">
+    <div class="reviews-header">
+        <a href="/reviews" class="back-link">&larr; All reviews</a>
+        <h1>{{ company_name }}</h1>
+        {% if avg_rating %}
+        <div class="company-avg-rating">
+            <span class="company-rating-number">{{ avg_rating }}</span>
+            <span class="company-rating-stars">
+                {% for i in range(avg_rating | int) %}★{% endfor %}
+                {% for i in range(5 - avg_rating | int) %}☆{% endfor %}
+            </span>
+            <span class="company-rating-count">{{ reviews | length }} review{{ 's' if reviews | length != 1 }}</span>
+        </div>
+        {% endif %}
+        {% if user %}
+        <a href="/reviews/new?company={{ company_name }}" class="btn">Write a review</a>
+        {% else %}
+        <a href="/auth/login" class="btn">Sign in to write a review</a>
+        {% endif %}
+    </div>
+
+    {% if reviews %}
+    <div class="reviews-list">
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="review-card-header">
+                <div class="review-card-meta">
+                    {% if review.role %}
+                    <span class="review-role">{{ review.role }}</span>
+                    {% endif %}
+                    {% if review.employment_status %}
+                    <span class="review-status">{{ review.employment_status }}</span>
+                    {% endif %}
+                </div>
+                <div class="review-rating">
+                    {% for i in range(review.rating | int) %}★{% endfor %}
+                    {% for i in range(5 - review.rating | int) %}☆{% endfor %}
+                </div>
+            </div>
+            <h3 class="review-title">{{ review.title }}</h3>
+            <p class="review-body">{{ review.body }}</p>
+            {% if review.pros %}
+            <div class="review-proscons">
+                <span class="review-pro">+ {{ review.pros }}</span>
+            </div>
+            {% endif %}
+            {% if review.cons %}
+            <div class="review-proscons">
+                <span class="review-con">- {{ review.cons }}</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No reviews yet for {{ company_name }}. Be the first to write one.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

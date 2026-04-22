@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Write a review - Verintel{% endblock %}
+
+{% block content %}
+<div class="reviews-page">
+    <div class="reviews-header">
+        <h1>Write a review</h1>
+        <p>Help other job seekers by sharing your experience.</p>
+    </div>
+
+    <div class="review-form-card">
+        <form method="post" action="/reviews/new">
+            <div class="form-group">
+                <label for="company_name">Company name</label>
+                <input type="text"
+                       id="company_name"
+                       name="company_name"
+                       placeholder="e.g. Penguin Random House"
+                       value="{{ company or '' }}"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label for="company_domain">Company website (optional)</label>
+                <input type="text"
+                       id="company_domain"
+                       name="company_domain"
+                       placeholder="e.g. penguinrandomhouse.com">
+            </div>
+
+            <div class="form-group">
+                <label for="role">Your role (optional)</label>
+                <input type="text"
+                       id="role"
+                       name="role"
+                       placeholder="e.g. Frontend Developer">
+            </div>
+
+            <div class="form-group">
+                <label for="employment_status">Employment status</label>
+                <select id="employment_status" name="employment_status">
+                    <option value="">Prefer not to say</option>
+                    <option value="current">Current employee</option>
+                    <option value="former">Former employee</option>
+                    <option value="contractor">Contractor</option>
+                    <option value="interviewed">Interviewed only</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Overall rating</label>
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5" required>
+                    <label for="star5">★</label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4">★</label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3">★</label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2">★</label>
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1">★</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="title">Review title</label>
+                <input type="text"
+                       id="title"
+                       name="title"
+                       placeholder="Summarize your experience in one line"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label for="body">Your review</label>
+                <textarea id="body"
+                          name="body"
+                          placeholder="Share your experience working here..."
+                          rows="6"
+                          required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="pros">Pros (optional)</label>
+                <textarea id="pros"
+                          name="pros"
+                          placeholder="What did you like about working here?"
+                          rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="cons">Cons (optional)</label>
+                <textarea id="cons"
+                          name="cons"
+                          placeholder="What could be improved?"
+                          rows="3"></textarea>
+            </div>
+
+            <button type="submit">Submit review</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

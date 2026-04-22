@@ -9,6 +9,8 @@ from auth.dependencies import get_optional_user
 from db.models import User
 from routers.profile import router as profile_router
 from routers.github import router as github_router
+from routers.reviews import router as reviews_router
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -23,6 +25,7 @@ app.include_router(jobs_router)
 app.include_router(auth_router)
 app.include_router(profile_router)
 app.include_router(github_router)
+app.include_router(reviews_router)
 
 
 @app.get("/")
