@@ -69,42 +69,112 @@
             <button type="submit">Save profile</button>       
         </form>
     </div>
+{% if profile.github_username %}
+    <div class="profile-section">
+      <h2>GitHub activity</h2>
+      <div id="github-grid" class="github-grid-container">
+        <p class="github-loading">Loading contributions...</p>
+    </div>
+    <div id="github-repos" class="github-repos"></div>
+</div>
+{% endif %}
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    function getLocation() {
-        if (!navigator.geolocation) {
-            alert("Geolocation is not supported by your browser.");
-            return;
-        }
-        navigator.geolocation.getCurrentPosition(
-            async function(position) {
-                const lat = position.coords.latitude
-                const lon = position.coords.longitude
-                try {
-                    const r = await fetch(
-                        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
-                        { headers: { "Accept-Language": "en" } }
-                    );
-                    const data = await r.json();
-                    const city = data.address.city
-                        || data.address.town
-                        || data.address.village
-                        || "";
-                    const state = data.address.state || "";
-                    const country = data.address.country_code?.toUpperCase() || "";
-                    const location = [city, state, country].filter(Boolean).join(", ");
-                    document.getElementById("location-input").value = location;
-                } catch {
-                    alert("Could not determine your location. Please enter it manually.");
-                }
-            },
-            function() {
-                alert("Location access was denied. Please enter your location manually.");
-            }
-        );
+function getLocation() {
+    if (!navigator.geolocation) {
+        alert("Geolocation is not supported by your browser.");
+        return;
     }
+    navigator.geolocation.getCurrentPosition(
+        async function(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            try {
+                const r = await fetch(
+                    `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
+                    { headers: { "Accept-Language": "en" } }
+                );
+                const data = await r.json();
+                const city = data.address.city
+                    || data.address.town
+                    || data.address.village
+                    || "";
+                const state = data.address.state || "";
+                const country = data.address.country_code?.toUpperCase() || "";
+                const location = [city, state, country].filter(Boolean).join(", ");
+                document.getElementById("location-input").value = location;
+            } catch {
+                alert("Could not determine your location. Please enter it manually.");
+            }
+        },
+        function() {
+            alert("Location access was denied. Please enter your location manually.");
+        }
+    );
+}
+
+{% if profile.github_username %}
+async function loadGithubGrid() {
+    const username = "{{ profile.github_username }}";
+    try {
+        const r = await fetch(`/api/github/contributions/${username}`);
+        if (!r.ok) throw new Error("Failed to load");
+        const data = await r.json();
+
+        const container = document.getElementById("github-grid");
+        const weeks = data.weeks;
+        const total = data.total_contributions;
+
+        let html = `<p class="github-total">${total} contributions in the last year</p>`;
+        html += '<div class="github-grid">';
+
+        const maxCount = Math.max(...weeks.flatMap(w => w.contributionDays.map(d => d.contributionCount)));
+
+        weeks.forEach(week => {
+            html += '<div class="github-week">';
+            week.contributionDays.forEach(day => {
+                const count = day.contributionCount;
+                let level = 0;
+                if (count > 0) level = 1;
+                if (count >= Math.ceil(maxCount * 0.25)) level = 2;
+                if (count >= Math.ceil(maxCount * 0.5)) level = 3;
+                if (count >= Math.ceil(maxCount * 0.75)) level = 4;
+                html += `<div class="github-day github-day--${level}" title="${count} contributions on ${day.date}"></div>`;
+            });
+            html += '</div>';
+        });
+
+        html += '</div>';
+        container.innerHTML = html;
+
+        if (data.top_repos && data.top_repos.length > 0) {
+            const repoContainer = document.getElementById("github-repos");
+            let repoHtml = '<h3 class="github-repos-title">Top repositories</h3><div class="github-repo-grid">';
+            data.top_repos.forEach(repo => {
+                repoHtml += `
+                <a href="${repo.url}" target="_blank" class="github-repo-card">
+                    <span class="github-repo-name">${repo.name}</span>
+                    ${repo.description ? `<span class="github-repo-desc">${repo.description}</span>` : ""}
+                    <span class="github-repo-meta">
+                        ${repo.primaryLanguage ? `<span class="github-repo-lang" style="--lang-color: ${repo.primaryLanguage.color}">${repo.primaryLanguage.name}</span>` : ""}
+                        ${repo.stargazerCount > 0 ? `<span>★ ${repo.stargazerCount}</span>` : ""}
+                    </span>
+                </a>`;
+            });
+            repoHtml += '</div>';
+            repoContainer.innerHTML = repoHtml;
+        }
+
+    } catch(e) {
+        document.getElementById("github-grid").innerHTML = 
+            '<p class="github-error">Could not load GitHub activity.</p>';
+    }
+}
+
+loadGithubGrid();
+{% endif %}
 </script>
 {% endblock %}

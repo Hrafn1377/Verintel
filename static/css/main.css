@@ -737,3 +737,111 @@ button[type="submit"]:hover {
     background: var(--color-bg);
     color: var(--color-text);
 }
+
+/* github grid */
+.github-grid-container {
+    margin-bottom: 1.5rem;
+}
+
+.github-total {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.github-grid {
+    display: flex;
+    gap: 3px;
+}
+
+.github-week {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.github-day {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: var(--color-border);
+}
+
+.github-day--1 { background: #c6e48b; }
+.github-day--2 { background: #7bc96f; }
+.github-day--3 { background: #239a3b; }
+.github-day--4 { background: #196127; }
+
+.github-loading {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.github-error {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+/* github repos */
+.github-repos-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.github-repo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+}
+
+.github-repo-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    border: 0.5pxx solid var(--color-border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--color-text);
+    background: var(--color-surface);
+}
+
+.github-repo-card:hover {
+    background: var(--color-bg);
+}
+
+.github-repo-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.github-repo-desc {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+    flex: 1;
+}
+
+.github-repo-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.github-repo-lang::before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--lang-color, var(--color-border));
+    margin-right: 4px;
+    vertical-align: middle;
+}
