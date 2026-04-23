@@ -3,10 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Verintel{% endblock %}</title>
+    <title>{% block title %}Verintel — Find jobs you can trust{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Verintel scores and verifies job postings, flags fraudulent recruiters, and helps job seekers find legitimate work.{% endblock %}">
+    {% block robots %}<meta name="robots" content="index, follow">{% endblock %}
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{% block og_title %}Verintel — Find jobs you can trust{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Verintel scores and verifies job postings, flags fraudulent recruiters, and helps job seekers find legitimate work.{% endblock %}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}https://verintel.com{% endblock %}">
+    <meta property="og:site_name" content="Verintel">
+
+    <!-- Twitter/X -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{% block twitter_title %}Verintel — Find jobs you can trust{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Verintel scores and verifies job postings, flags fraudulent recruiters, and helps job seekers find legitimate work.{% endblock %}">
+
+    <link rel="canonical" href="{% block canonical %}https://verintel.com{% endblock %}">
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <link rel="stylesheet" href="/static/css/main.css">
 </head>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <link rel="stylesheet" href="/static/css/main.css">
 <body>
     <header>
         <nav>

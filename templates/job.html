@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}{{ job.title }} — Verintel{% endblock %}
+{% block title %}{{ job.title }} at {{ job.company }} — Verintel{% endblock %}
+
+{% block meta_description %}{{ job.title }} at {{ job.company }}. Verified and scored by Verintel for authenticity and fraud indicators.{% endblock %}
+
+{% block og_title %}{{ job.title }} at {{ job.company }} — Verintel{% endblock %}
+
+{% block og_description %}{{ job.title }} at {{ job.company }}. Verified and scored by Verintel.{% endblock %}
+
+{% block og_type %}website{% endblock %}
+
+{% block og_url %}https://verintel.com/jobs/{{ job.id }}{% endblock %}
+
+{% block canonical %}https://verintel.com/jobs/{{ job.id }}{% endblock %}
 
 {% block content %}
 <div class="job-detail">
@@ -36,4 +48,27 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "JobPosting",
+  "title": "{{ job.title }}",
+  "hiringOrganization": {
+    "@type": "Organization",
+    "name": "{{ job.company_name }}"
+  },
+  "description": "{{ job.body | replace('"', '\\"') | replace('\n', ' ') }}",
+  "datePosted": "{{ job.created_at.strftime('%Y-%m-%d') if job.created_at else '' }}",
+  "jobLocation": {
+    "@type": "Place",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "US"
+    }
+  }
+}
+</script>
 {% endblock %}

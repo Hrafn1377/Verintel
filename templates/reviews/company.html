@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}{{ company_name }} reviews — Verintel{% endblock %}
+{% block title %}{{ company_name }} Reviews — Verintel{% endblock %}
+
+{% block meta_description %}Read employee reviews for {{ company_name }}. Real experiences from current and former employees.{% endblock %}
+
+{% block og_title %}{{ company_name }} Reviews — Verintel{% endblock %}
+
+{% block og_description %}Read employee reviews for {{ company_name }}. Real experiences from current and former employees.{% endblock %}
+
+{% block og_url %}https://verintel.com/reviews/company/{{ company_name }}{% endblock %}
+
+{% block canonical %}https://verintel.com/reviews/company/{{ company_name }}{% endblock %}
 
 {% block content %}
 <div class="reviews-page">
