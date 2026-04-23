@@ -8,6 +8,7 @@ from db.models import User, Profile
 from auth.dependencies import get_current_user, get_optional_user
 from utils import sanitize_text, sanitize_url
 import json
+from audit import log_action
 
 
 templates = Jinja2Templates(directory="templates")
@@ -152,6 +153,13 @@ async def delete_account(
     if github_username.strip():
         profile.github_username = sanitize_text(github_username, 100)
         profile.github_prompted = True
+
+    log_action(
+        db,
+        action="user.delete_account",
+        user_id=current_user.id,
+        ip_address=request.client.host,
+    )
 
     db.commit()
 

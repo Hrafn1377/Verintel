@@ -3,6 +3,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from typing import Optional
 import uuid
+from audit import log_action
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from db.session import get_db
@@ -67,6 +68,13 @@ async def register(
     db.add(profile)
     db.commit()
 
+    log_action(
+        db,
+        action="user.register",
+        user_id=user.id,
+        ip_address=request.client.host,
+    )
+
     access_token = create_access_token(data={"sub": user.id})
     refresh_token = create_refresh_token(data={"sub": user.id})
 
@@ -105,6 +113,7 @@ async def login(
     access_token = create_access_token(data={"sub": user.id})
     refresh_token = create_refresh_token(data={"sub": user.id})
 
+    from fastapi.responses import RedirectResponse
     resp = RedirectResponse(url="/", status_code=302)
     resp.set_cookie("access_token", access_token, httponly=True, samesite="lax")
     resp.set_cookie("refresh_token", refresh_token, httponly=True, samesite="lax")
