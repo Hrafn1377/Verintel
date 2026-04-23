@@ -103,3 +103,26 @@ class EmployerReview(Base):
     created_at = Column(DateTime, server_default=func.now())
 
     user = relationship("User", backref="reviews")    
+
+class CV(Base):
+    __tablename__ = "cvs"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False, unique=True)
+    full_name = Column(String, nullable=True)
+    headline = Column(String, nullable=True)
+    summary = Column(Text, nullable=True)
+    email = Column(String, nullable=True)
+    phone = Column(String, nullable=True)
+    location = Column(String, nullable=True)
+    website = Column(String, nullable=True)
+    linkedin = Column(String, nullable=True)
+    github = Column(String, nullable=True)
+    work_experience = Column(JSON, nullable=True)
+    education = Column(JSON, nullable=True)
+    skills = Column(JSON, nullable=True)
+    certifications = Column(JSON, nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    user = relationship("User", backref="cv")

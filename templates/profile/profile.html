@@ -10,7 +10,7 @@
         </div>
         <div class="profile-info">
             <h1>{{ profile.display_name or 'Your profile' }}</h1>
-            <p class="profile-header">{{ profile.headline or 'Add a headline' }}</p>
+            <p class="profile-headline">{{ profile.headline or 'Add a headline' }}</p>
             <p class="profile-meta">
                 {% if profile.location %}
                 <span>{{ profile.location }}</span>

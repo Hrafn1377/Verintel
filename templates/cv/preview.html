@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ cv.full_name or 'CV' }} — Verintel</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: system-ui, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #2c2c2a;
+            background: #f1efe8;
+            padding: 2rem;
+        }
+
+        .cv-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .cv-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding: 1rem 2rem;
+            background: #f1efe8;
+            border-bottom: 0.5px solid #d3d1c7;
+        }
+
+        .cv-actions a {
+            padding: 8px 20px;
+            border: 0.5px solid #d3d1c7;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            color: #2c2c2a;
+            background: #ffffff;
+        }
+
+        .cv-actions a:hover {
+            background: #f1efe8;
+        }
+
+        .cv-document {
+            padding: 3rem;
+        }
+
+        .cv-top {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #2c2c2a;
+        }
+
+        .cv-name {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .cv-headline {
+            font-size: 16px;
+            color: #5f5e5a;
+            margin-bottom: 1rem;
+        }
+
+        .cv-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 12px;
+            color: #5f5e5a;
+        }
+
+        .cv-contact a {
+            color: #5f5e5a;
+            text-decoration: none;
+        }
+
+        .cv-section {
+            margin-bottom: 1.75rem;
+        }
+
+        .cv-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #5f5e5a;
+            margin-bottom: 0.75rem;
+            padding-bottom: 4px;
+            border-bottom: 0.5px solid #d3d1c7;
+        }
+
+        .cv-summary {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #2c2c2a;
+        }
+
+        .cv-job {
+            margin-bottom: 1.25rem;
+        }
+
+        .cv-job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+
+        .cv-job-title {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .cv-job-dates {
+            font-size: 12px;
+            color: #5f5e5a;
+            white-space: nowrap;
+        }
+
+        .cv-job-company {
+            font-size: 13px;
+            color: #5f5e5a;
+            margin-bottom: 6px;
+        }
+
+        .cv-job-description {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #2c2c2a;
+        }
+
+        .cv-edu-item {
+            margin-bottom: 1rem;
+        }
+
+        .cv-edu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .cv-edu-qualification {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .cv-edu-year {
+            font-size: 12px;
+            color: #5f5e5a;
+        }
+
+        .cv-edu-institution {
+            font-size: 13px;
+            color: #5f5e5a;
+        }
+
+        .cv-edu-type {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #f1efe8;
+            color: #5f5e5a;
+            margin-left: 8px;
+        }
+
+        .cv-edu-url {
+            font-size: 12px;
+            color: #5f5e5a;
+        }
+
+        .cv-edu-url a {
+            color: #5f5e5a;
+        }
+
+        .cv-skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .cv-skill {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            background: #f1efe8;
+            color: #2c2c2a;
+            border: 0.5px solid #d3d1c7;
+        }
+
+        .cv-skill-level {
+            color: #5f5e5a;
+            margin-left: 4px;
+        }
+
+        .cv-cert-item {
+            margin-bottom: 0.75rem;
+        }
+
+        .cv-cert-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .cv-cert-meta {
+            font-size: 12px;
+            color: #5f5e5a;
+        }
+
+        .cv-cert-meta a {
+            color: #5f5e5a;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .cv-wrapper { border-radius: 0; }
+            .cv-actions { display: none; }
+        }
+    </style>
+</head>
+<body>
+    {% if not pdf_mode %}
+    <div class="cv-actions">
+        <a href="/cv">Edit</a>
+        <a href="/cv/download">Download PDF</a>
+    </div>
+    {% endif %}
+
+    <div class="cv-wrapper">
+        <div class="cv-document">
+
+            <div class="cv-top">
+                <div class="cv-name">{{ cv.full_name or 'Your Name' }}</div>
+                {% if cv.headline %}
+                <div class="cv-headline">{{ cv.headline }}</div>
+                {% endif %}
+                <div class="cv-contact">
+                    {% if cv.email %}<span>{{ cv.email }}</span>{% endif %}
+                    {% if cv.phone %}<span>{{ cv.phone }}</span>{% endif %}
+                    {% if cv.location %}<span>{{ cv.location }}</span>{% endif %}
+                    {% if cv.website %}<a href="{{ cv.website }}">{{ cv.website }}</a>{% endif %}
+                    {% if cv.linkedin %}<a href="{{ cv.linkedin }}">{{ cv.linkedin }}</a>{% endif %}
+                    {% if cv.github %}<a href="{{ cv.github }}">{{ cv.github }}</a>{% endif %}
+                </div>
+            </div>
+
+            {% if cv.summary %}
+            <div class="cv-section">
+                <div class="cv-section-title">Summary</div>
+                <p class="cv-summary">{{ cv.summary }}</p>
+            </div>
+            {% endif %}
+
+            {% if cv.work_experience %}
+            <div class="cv-section">
+                <div class="cv-section-title">Work experience</div>
+                {% for job in cv.work_experience %}
+                <div class="cv-job">
+                    <div class="cv-job-header">
+                        <span class="cv-job-title">{{ job.title }}</span>
+                        <span class="cv-job-dates">{{ job.start_date }}{% if job.end_date %} — {{ job.end_date }}{% endif %}</span>
+                    </div>
+                    <div class="cv-job-company">{{ job.company }}</div>
+                    {% if job.description %}
+                    <p class="cv-job-description">{{ job.description }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if cv.education %}
+            <div class="cv-section">
+                <div class="cv-section-title">Education</div>
+                {% for edu in cv.education %}
+                <div class="cv-edu-item">
+                    <div class="cv-edu-header">
+                        <span class="cv-edu-qualification">
+                            {{ edu.qualification }}
+                            {% if edu.type %}
+                            <span class="cv-edu-type">{{ edu.type }}</span>
+                            {% endif %}
+                        </span>
+                        {% if edu.year %}
+                        <span class="cv-edu-year">{{ edu.year }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="cv-edu-institution">{{ edu.institution }}</div>
+                    {% if edu.url %}
+                    <div class="cv-edu-url"><a href="{{ edu.url }}">View certificate</a></div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if cv.skills %}
+            <div class="cv-section">
+                <div class="cv-section-title">Skills</div>
+                <div class="cv-skills-grid">
+                    {% for skill in cv.skills %}
+                    <span class="cv-skill">
+                        {{ skill.name }}
+                        {% if skill.level %}
+                        <span class="cv-skill-level">· {{ skill.level }}</span>
+                        {% endif %}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if cv.certifications %}
+            <div class="cv-section">
+                <div class="cv-section-title">Certifications</div>
+                {% for cert in cv.certifications %}
+                <div class="cv-cert-item">
+                    <div class="cv-cert-name">{{ cert.name }}</div>
+                    <div class="cv-cert-meta">
+                        {{ cert.issuer }}{% if cert.year %} · {{ cert.year }}{% endif %}
+                        {% if cert.url %}
+                        · <a href="{{ cert.url }}">View</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}CV Builder - Verintel{% endblock %}
+
+{% block content %}
+<div class="cv-page">
+    <div class="cv-header">
+        <h1>CV Builder</h1>
+        <p>Build your CV and download it as a PDF.</p>
+        {% if cv %}
+        <div class="cv-header-actions">
+            <a href="/cv/preview" class="btn">Preview</a>
+            <a href="/cv/download" class="btn">Download PDF</a>
+        </div>
+        {% endif %}
+    </div>
+<form method="post" action="/cv/save" id="cv-form">
+
+        <div class="cv-section">
+            <h2>Personal details</h2>
+            <div class="form-group">
+                <label for="full_name">Full name</label>
+                <input type="text" id="full_name" name="full_name"
+                       placeholder="James Harmon"
+                       value="{{ cv.full_name or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="headline">Professional headline</label>
+                <input type="text" id="headline" name="headline"
+                       placeholder="Full-Stack Web Developer"
+                       value="{{ cv.headline or '' }}">
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email"
+                           placeholder="you@example.com"
+                           value="{{ cv.email or '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="text" id="phone" name="phone"
+                           placeholder="+1 (555) 000-0000"
+                           value="{{ cv.phone or '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location"
+                           placeholder="Bristol, TN"
+                           value="{{ cv.location or '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="website">Website</label>
+                    <input type="text" id="website" name="website"
+                           placeholder="https://yoursite.com"
+                           value="{{ cv.website or '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="linkedin">LinkedIn</label>
+                    <input type="text" id="linkedin" name="linkedin"
+                           placeholder="linkedin.com/in/yourname"
+                           value="{{ cv.linkedin or '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="github">GitHub</label>
+                    <input type="text" id="github" name="github"
+                           placeholder="github.com/yourname"
+                           value="{{ cv.github or '' }}">
+                </div>
+            </div>
+        </div>
+        <div class="cv-section">
+            <h2>Summary</h2>
+            <div class="form-group">
+                <label for="summary">Professional summary</label>
+                <textarea id="summary" name="summary" rows="4"
+                          placeholder="A brief overview of your experience and what you bring to the table...">{{ cv.summary or '' }}</textarea>
+            </div>
+        </div>
+
+        <div class="cv-section">
+            <h2>Work experience</h2>
+            <div id="work-experience-list"></div>
+            <button type="button" class="add-btn" onclick="addWorkExperience()">+ Add position</button>
+            <input type="hidden" name="work_experience" id="work_experience_data"
+                   value="{{ cv.work_experience | tojson if cv and cv.work_experience else '[]' }}">
+        </div>
+
+        <div class="cv-section">
+            <h2>Education</h2>
+            <div id="education-list"></div>
+            <button type="button" class="add-btn" onclick="addEducation()">+ Add education</button>
+            <input type="hidden" name="education" id="education_data"
+                   value="{{ cv.education | tojson if cv and cv.education else '[]' }}">
+         </div>
+
+        <div class="cv-section">
+            <h2>Skills</h2>
+            <div id="skills-list"></div>
+            <button type="button" class="add-btn" onclick="addSkill()">+ Add skill</button>
+            <input type="hidden" name="skills" id="skills_data"
+                   value="{{ cv.skills | tojson if cv and cv.skills else '[]' }}">
+        </div>
+
+        <div class="cv-section">
+            <h2>Certifications</h2>
+            <div id="certifications-list"></div>
+            <button type="button" class="add-btn" onclick="addCertification()">+ Add certification</button>
+            <input type="hidden" name="certifications" id="certifications_data"
+                   value="{{ cv.certifications | tojson if cv and cv.certifications else '[]' }}">
+        </div>
+
+        <div class="cv-save">
+            <button type="submit">Save and preview</button>
+        </div>
+
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const existingData = {
+    work_experience: {{ cv.work_experience | tojson if cv and cv.work_experience else '[]' }},
+    education: {{ cv.education | tojson if cv and cv.education else '[]' }},
+    skills: {{ cv.skills | tojson if cv and cv.skills else '[]' }},
+    certifications: {{ cv.certifications | tojson if cv and cv.certifications else '[]' }},
+};
+
+function renderWorkExperience(items) {
+    const container = document.getElementById('work-experience-list');
+    container.innerHTML = '';
+    items.forEach((item, index) => {
+        container.innerHTML += `
+        <div class="cv-item-card">
+            <div class="cv-item-header">
+                <strong>${item.title || 'Position'} at ${item.company || 'Company'}</strong>
+                <button type="button" class="remove-btn" onclick="removeItem('work_experience', ${index})">Remove</button>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Job title</label>
+                    <input type="text" value="${item.title || ''}"
+                           onchange="updateItem('work_experience', ${index}, 'title', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Company</label>
+                    <input type="text" value="${item.company || ''}"
+                           onchange="updateItem('work_experience', ${index}, 'company', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Start date</label>
+                    <input type="text" value="${item.start_date || ''}" placeholder="e.g. Jan 2022"
+                           onchange="updateItem('work_experience', ${index}, 'start_date', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>End date</label>
+                    <input type="text" value="${item.end_date || ''}" placeholder="e.g. Present"
+                           onchange="updateItem('work_experience', ${index}, 'end_date', this.value)">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea rows="3" onchange="updateItem('work_experience', ${index}, 'description', this.value)">${item.description || ''}</textarea>
+            </div>
+        </div>`;
+    });
+    updateHidden('work_experience');
+}
+
+function renderEducation(items) {
+    const container = document.getElementById('education-list');
+    container.innerHTML = '';
+    items.forEach((item, index) => {
+        container.innerHTML += `
+        <div class="cv-item-card">
+            <div class="cv-item-header">
+                <strong>${item.institution || 'Institution'}</strong>
+                <button type="button" class="remove-btn" onclick="removeItem('education', ${index})">Remove</button>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Type</label>
+                    <select onchange="updateItem('education', ${index}, 'type', this.value)">
+                        <option value="degree" ${item.type === 'degree' ? 'selected' : ''}>University / College degree</option>
+                        <option value="bootcamp" ${item.type === 'bootcamp' ? 'selected' : ''}>Bootcamp</option>
+                        <option value="online" ${item.type === 'online' ? 'selected' : ''}>Online course</option>
+                        <option value="certification" ${item.type === 'certification' ? 'selected' : ''}>Certification program</option>
+                        <option value="self-taught" ${item.type === 'self-taught' ? 'selected' : ''}>Self-taught / Independent study</option>
+                        <option value="apprenticeship" ${item.type === 'apprenticeship' ? 'selected' : ''}>Apprenticeship</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Institution / Platform</label>
+                    <input type="text" value="${item.institution || ''}"
+                           placeholder="e.g. Zero to Mastery, Coursera, University of Tennessee"
+                           onchange="updateItem('education', ${index}, 'institution', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Course / Qualification</label>
+                    <input type="text" value="${item.qualification || ''}"
+                           placeholder="e.g. Full-Stack Web Development, BSc Computer Science"
+                           onchange="updateItem('education', ${index}, 'qualification', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Year completed</label>
+                    <input type="text" value="${item.year || ''}" placeholder="e.g. 2024"
+                           onchange="updateItem('education', ${index}, 'year', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Certificate URL (optional)</label>
+                    <input type="text" value="${item.url || ''}" placeholder="https://..."
+                           onchange="updateItem('education', ${index}, 'url', this.value)">
+                </div>
+            </div>
+        </div>`;
+    });
+    updateHidden('education');
+}
+
+function renderSkills(items) {
+    const container = document.getElementById('skills-list');
+    container.innerHTML = '';
+    items.forEach((item, index) => {
+        container.innerHTML += `
+        <div class="cv-skill-item">
+            <input type="text" value="${item.name || ''}" placeholder="e.g. TypeScript"
+                   onchange="updateItem('skills', ${index}, 'name', this.value)">
+            <select onchange="updateItem('skills', ${index}, 'level', this.value)">
+                <option value="beginner" ${item.level === 'beginner' ? 'selected' : ''}>Beginner</option>
+                <option value="intermediate" ${item.level === 'intermediate' ? 'selected' : ''}>Intermediate</option>
+                <option value="advanced" ${item.level === 'advanced' ? 'selected' : ''}>Advanced</option>
+                <option value="expert" ${item.level === 'expert' ? 'selected' : ''}>Expert</option>
+            </select>
+            <button type="button" class="remove-btn" onclick="removeItem('skills', ${index})">Remove</button>
+        </div>`;
+    });
+    updateHidden('skills');
+}
+
+function renderCertifications(items) {
+    const container = document.getElementById('certifications-list');
+    container.innerHTML = '';
+    items.forEach((item, index) => {
+        container.innerHTML += `
+        <div class="cv-item-card">
+            <div class="cv-item-header">
+                <strong>${item.name || 'Certification'}</strong>
+                <button type="button" class="remove-btn" onclick="removeItem('certifications', ${index})">Remove</button>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Certification name</label>
+                    <input type="text" value="${item.name || ''}"
+                           onchange="updateItem('certifications', ${index}, 'name', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Issuing organisation</label>
+                    <input type="text" value="${item.issuer || ''}"
+                           onchange="updateItem('certifications', ${index}, 'issuer', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Year</label>
+                    <input type="text" value="${item.year || ''}" placeholder="e.g. 2024"
+                           onchange="updateItem('certifications', ${index}, 'year', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>URL (optional)</label>
+                    <input type="text" value="${item.url || ''}" placeholder="https://..."
+                           onchange="updateItem('certifications', ${index}, 'url', this.value)">
+                </div>
+            </div>
+        </div>`;
+    });
+    updateHidden('certifications');
+}
+
+const data = {
+    work_experience: [...existingData.work_experience],
+    education: [...existingData.education],
+    skills: [...existingData.skills],
+    certifications: [...existingData.certifications],
+};
+
+function updateHidden(key) {
+    document.getElementById(`${key}_data`).value = JSON.stringify(data[key]);
+}
+
+function updateItem(key, index, field, value) {
+    data[key][index][field] = value;
+    updateHidden(key);
+}
+
+function removeItem(key, index) {
+    data[key].splice(index, 1);
+    render(key);
+}
+
+function render(key) {
+    if (key === 'work_experience') renderWorkExperience(data.work_experience);
+    if (key === 'education') renderEducation(data.education);
+    if (key === 'skills') renderSkills(data.skills);
+    if (key === 'certifications') renderCertifications(data.certifications);
+}
+
+function addWorkExperience() {
+    data.work_experience.push({ title: '', company: '', start_date: '', end_date: '', description: '' });
+    renderWorkExperience(data.work_experience);
+}
+
+function addEducation() {
+    data.education.push({ type: 'degree', institution: '', qualification: '', year: '', url: '' });
+    renderEducation(data.education);
+}
+
+function addSkill() {
+    data.skills.push({ name: '', level: 'intermediate' });
+    renderSkills(data.skills);
+}
+
+function addCertification() {
+    data.certifications.push({ name: '', issuer: '', year: '', url: '' });
+    renderCertifications(data.certifications);
+}
+
+renderWorkExperience(data.work_experience);
+renderEducation(data.education);
+renderSkills(data.skills);
+renderCertifications(data.certifications);
+</script>
+{% endblock %}
+
+
+
