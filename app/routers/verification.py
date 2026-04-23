@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, Depends, Form
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from typing import Optional
@@ -7,10 +8,14 @@ from db.session import get_db
 from db.models import TrustScore
 from scoring.engine import score_company, score_recruiter, score_posting
 import uuid
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 templates = Jinja2Templates(directory="templates")
 
 router = APIRouter(prefix="/verify", tags=["verification"])
+
+limiter = Limiter(key_func=get_remote_address)
 
 
 class CompanyRequest(BaseModel):
@@ -65,6 +70,7 @@ def persist_report(report, db: Session):
 
 
 @router.post("/company")
+@limiter.limit("10/minute")
 async def verify_company(
     payload: CompanyRequest,
     request: Request,
@@ -85,6 +91,7 @@ async def verify_company(
 
 
 @router.post("/recruiter")
+@limiter.limit("10/minute")
 async def verify_recruiter(
     payload: RecruiterRequest,
     request: Request,
@@ -103,6 +110,7 @@ async def verify_recruiter(
 
 
 @router.post("/posting")
+@limiter.limit("10/minute")
 async def verify_posting(
     request: Request,
     db: Session = Depends(get_db),

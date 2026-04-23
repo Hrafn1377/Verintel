@@ -66,7 +66,17 @@
                    name="github_username"
                    placeholder="GitHub username"
                    value="{{ profile.github_username or '' }}">
-            <button type="submit">Save profile</button>       
+            <button type="submit">Save profile</button>  
+        <div class="profile-danger-zone">
+            <h3>Your data</h3>
+            <div class="profile-danger-actions">
+                <a href="/profile/export" class="btn-secondary">Download my data</a>
+                <form method="post" action="/profile/delete-account"
+                    onsubmit="return confirm('Are you sure? This will permanently delete your account and all your data. This cannot be undone.')">
+                   <button type="submit" class="btn-danger">Delete account</button>
+                </form>
+            </div>
+        </div>         
         </form>
     </div>
 {% if profile.github_username %}

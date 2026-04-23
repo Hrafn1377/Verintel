@@ -1206,3 +1206,53 @@ button[type="submit"]:hover {
         grid-template-columns: 1fr;
     }
 }
+
+/* danger zone */
+.profile-danger-zone {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 0.5px solid var(--color-border);
+}
+
+.profile-danger-zone h3 {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.profile-danger-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-secondary {
+    padding: 8px 16px;
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius);
+    font-size: 13px;
+    text-decoration: none;
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+}
+
+.btn-secondary:hover {
+    background: var(--color-bg);
+    color: var(--color-text);
+}
+
+button.btn-danger {
+    padding: 8px 16px;
+    border: 0.5px solid var(--color-fail);
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--color-fail);
+    background: none;
+    cursor: pointer;
+}
+
+button.btn-danger:hover {
+    background: var(--color-fail-bg);
+}

@@ -9,6 +9,7 @@ from db.session import get_db
 from db.models import CV, User
 from auth.dependencies import get_current_user
 from pathlib import Path
+from utils import sanitize_text, sanitize_url
 
 templates = Jinja2Templates(directory="templates")
 
@@ -63,15 +64,15 @@ async def save_cv(
         certs = []
 
     if cv:
-        cv.full_name = full_name.strip()
-        cv.headline = headline.strip()
-        cv.summary = summary.strip()
-        cv.email = email.strip()
-        cv.phone = phone.strip()
-        cv.location = location.strip()
-        cv.website = website.strip()
-        cv.linkedin = linkedin.strip()
-        cv.github = github.strip()
+        cv.full_name = sanitize_text(full_name, 200)
+        cv.headline = sanitize_text(headline, 200)
+        cv.summary = sanitize_text(summary, 2000)
+        cv.email = sanitize_text(email, 200)
+        cv.phone = sanitize_text(phone, 50)
+        cv.location = sanitize_text(location, 200)
+        cv.website = sanitize_url(website)
+        cv.linkedin = sanitize_text(linkedin, 200)
+        cv.github = sanitize_text(github, 100)
         cv.work_experience = work_exp
         cv.education = edu
         cv.skills = skl
@@ -80,15 +81,15 @@ async def save_cv(
         cv = CV(
             id=str(uuid.uuid4()),
             user_id=current_user.id,
-            full_name=full_name.strip(),
-            headline=headline.strip(),
-            summary=summary.strip(),
-            email=email.strip(),
-            phone=phone.strip(),
-            location=location.strip(),
-            website=website.strip(),
-            linkedin=linkedin.strip(),
-            github=github.strip(),
+            full_name=sanitize_text(full_name, 200),
+            headline=sanitize_text(headline, 200),
+            summary=sanitize_text(summary, 2000),
+            email=sanitize_text(email, 200),
+            phone=sanitize_text(phone, 50),
+            location=sanitize_text(location, 200),
+            website=sanitize_url(website),
+            linkedin=sanitize_text(linkedin, 200),
+            github=sanitize_text(github, 100),
             work_experience=work_exp,
             education=edu,
             skills=skl,

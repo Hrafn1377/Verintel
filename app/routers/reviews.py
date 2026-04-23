@@ -8,6 +8,7 @@ import uuid
 from db.session import get_db
 from db.models import EmployerReview, User
 from auth.dependencies import get_current_user, get_optional_user
+from utils import sanitize_text, sanitize_url, sanitize_domain
 
 templates = Jinja2Templates(directory="templates")
 
@@ -66,18 +67,18 @@ async def create_review(
     cons: str = Form(""),
 ):
     review = EmployerReview(
-        id=str(uuid.uuid4()),
-        user_id=current_user.id,
-        company_name=company_name.strip(),
-        company_domain=company_domain.strip() or None,
-        rating=max(1.0, min(5.0, rating)),
-        title=title.strip(),
-        body=body.strip(),
-        role=role.strip() or None,
-        employment_status=employment_status.strip() or None,
-        pros=pros.strip() or None,
-        cons=cons.strip() or None,
-    )
+    id=str(uuid.uuid4()),
+    user_id=current_user.id,
+    company_name=sanitize_text(company_name, 200),
+    company_domain=sanitize_domain(company_domain) or None,
+    rating=max(1.0, min(5.0, rating)),
+    title=sanitize_text(title, 200),
+    body=sanitize_text(body, 5000),
+    role=sanitize_text(role, 200) or None,
+    employment_status=employment_status.strip() or None,
+    pros=sanitize_text(pros, 1000) or None,
+    cons=sanitize_text(cons, 1000) or None,
+)
     db.add(review)
     db.commit()
 

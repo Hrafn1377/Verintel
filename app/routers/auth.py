@@ -3,6 +3,8 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from typing import Optional
 import uuid
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from db.session import get_db
 from db.models import User, Profile
 from auth.security import (
@@ -13,6 +15,8 @@ from auth.security import (
     decode_token
 )
 from fastapi.responses import RedirectResponse
+
+limiter = Limiter(key_func=get_remote_address)
 
 templates = Jinja2Templates(directory="templates")
 
@@ -28,6 +32,7 @@ async def register_page(request: Request):
 
 
 @router.post("/register")
+@limiter.limit("3/minute")
 async def register(
     request: Request,
     response: Response,
@@ -81,6 +86,7 @@ async def login_page(request: Request):
 
 
 @router.post("/login")
+@limiter.limit("5/minute")
 async def login(
     request: Request,
     db: Session = Depends(get_db),
