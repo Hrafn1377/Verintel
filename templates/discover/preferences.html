@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Job Preferences - Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="discover-page">
+    <div class="discover-header">
+        <a href="/discover" class="back-link">&larr; Back to discoveries</a>
+        <h1>Job Preferences</h1>
+        <p>Tell us what you're looking for and we'll surface the right jobs.</p>
+    </div>
+
+    <form method="post" action="/discover/preferences" id="preferences-form">
+        <div class="cv-section">
+            <h2>Job titles</h2>
+            <p class="form-hint">Add the job titles you're interested in.</p>
+            <div id="job-titles-list"></div>
+            <button type="button" class="add-btn" onclick="addTag('job_titles', 'e.g. Frontend Developer')">+ Add job title</button>
+            <input type="hidden" name="job_titles" id="job_titles_data"
+                   value="{{ preferences.job_titles | tojson if preferences and preferences.job_titles else '[]' }}">
+        </div>
+
+        <div class="cv-section">
+            <h2>Locations</h2>
+            <p class="form-hint">Add locations you're open to working in.</p>
+            <div id="locations-list"></div>
+            <button type="button" class="add-btn" onclick="addTag('locations', 'e.g. Bristol, TN')">+ Add location</button>
+            <input type="hidden" name="locations" id="locations_data"
+                   value="{{ preferences.locations | tojson if preferences and preferences.locations else '[]' }}">
+        </div>
+
+        <div class="cv-section">
+            <h2>Work arrangement</h2>
+            <div class="form-group">
+                <label for="remote_preference">Preferred work arrangement</label>
+                <select id="remote_preference" name="remote_preference">
+                    <option value="">No preference</option>
+                    <option value="remote" {% if preferences and preferences.remote_preference == 'remote' %}selected{% endif %}>Remote only</option>
+                    <option value="hybrid" {% if preferences and preferences.remote_preference == 'hybrid' %}selected{% endif %}>Hybrid</option>
+                    <option value="onsite" {% if preferences and preferences.remote_preference == 'onsite' %}selected{% endif %}>On-site</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="open_to_relocation"
+                           {% if preferences and preferences.open_to_relocation %}checked{% endif %}>
+                    Open to relocation
+                </label>
+            </div>
+        </div>
+
+        <div class="cv-section">
+            <h2>Salary range</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="min_salary">Minimum salary (USD)</label>
+                    <input type="number" id="min_salary" name="min_salary"
+                           placeholder="e.g. 50000"
+                           value="{{ preferences.min_salary | int if preferences and preferences.min_salary else '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="max_salary">Maximum salary (USD)</label>
+                    <input type="number" id="max_salary" name="max_salary"
+                           placeholder="e.g. 100000"
+                           value="{{ preferences.max_salary | int if preferences and preferences.max_salary else '' }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="cv-section">
+            <h2>Companies to exclude</h2>
+            <p class="form-hint">Add companies you never want to see jobs from.</p>
+            <div id="excluded-companies-list"></div>
+            <button type="button" class="add-btn" onclick="addTag('excluded_companies', 'e.g. Acme Corp')">+ Add company</button>
+            <input type="hidden" name="excluded_companies" id="excluded_companies_data"
+                   value="{{ preferences.excluded_companies | tojson if preferences and preferences.excluded_companies else '[]' }}">
+        </div>
+
+        <div class="cv-section">
+            <h2>Industries to exclude</h2>
+            <p class="form-hint">Add industries you're not interested in.</p>
+            <div id="excluded-industries-list"></div>
+            <button type="button" class="add-btn" onclick="addTag('excluded_industries', 'e.g. MLM, Crypto')">+ Add industry</button>
+            <input type="hidden" name="excluded_industries" id="excluded_industries_data"
+                   value="{{ preferences.excluded_industries | tojson if preferences and preferences.excluded_industries else '[]' }}">
+        </div>
+
+        <div class="cv-save">
+            <button type="submit">Save preferences</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const existingPrefs = {
+    job_titles: {{ preferences.job_titles | tojson if preferences and preferences.job_titles else '[]' }},
+    locations: {{ preferences.locations | tojson if preferences and preferences.locations else '[]' }},
+    excluded_companies: {{ preferences.excluded_companies | tojson if preferences and preferences.excluded_companies else '[]' }},
+    excluded_industries: {{ preferences.excluded_industries | tojson if preferences and preferences.excluded_industries else '[]' }},
+};
+
+const tagData = {
+    job_titles: [...existingPrefs.job_titles],
+    locations: [...existingPrefs.locations],
+    excluded_companies: [...existingPrefs.excluded_companies],
+    excluded_industries: [...existingPrefs.excluded_industries],
+};
+
+const containerMap = {
+    job_titles: 'job-titles-list',
+    locations: 'locations-list',
+    excluded_companies: 'excluded-companies-list',
+    excluded_industries: 'excluded-industries-list',
+};
+
+function renderTags(key) {
+    const container = document.getElementById(containerMap[key]);
+    container.innerHTML = '';
+    tagData[key].forEach((tag, index) => {
+        container.innerHTML += `
+        <div class="tag-item">
+            <input type="text" value="${tag}"
+                   onchange="updateTag('${key}', ${index}, this.value)">
+            <button type="button" class="remove-btn" onclick="removeTag('${key}', ${index})">Remove</button>
+        </div>`;
+    });
+    document.getElementById(`${key}_data`).value = JSON.stringify(tagData[key]);
+}
+
+function addTag(key, placeholder) {
+    tagData[key].push('');
+    renderTags(key);
+    const inputs = document.querySelectorAll(`#${containerMap[key]} input`);
+    if (inputs.length > 0) {
+        inputs[inputs.length - 1].placeholder = placeholder;
+        inputs[inputs.length - 1].focus();
+    }
+}
+
+function updateTag(key, index, value) {
+    tagData[key][index] = value;
+    document.getElementById(`${key}_data`).value = JSON.stringify(tagData[key]);
+}
+
+function removeTag(key, index) {
+    tagData[key].splice(index, 1);
+    renderTags(key);
+}
+
+renderTags('job_titles');
+renderTags('locations');
+renderTags('excluded_companies');
+renderTags('excluded_industries');
+</script>
+{% endblock %}
+
+  

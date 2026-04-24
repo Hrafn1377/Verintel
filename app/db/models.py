@@ -126,3 +126,22 @@ class CV(Base):
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     user = relationship("User", backref="cv")
+
+
+class JobPreferences(Base):
+    __tablename__ = "job_preferences"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False, unique=True)
+    job_titles = Column(JSON, nullable=True)
+    locations = Column(JSON, nullable=True)
+    remote_preference = Column(String, nullable=True)
+    min_salary = Column(Float, nullable=True)
+    max_salary = Column(Float, nullable=True)
+    excluded_industries = Column(JSON, nullable=True)
+    excluded_companies = Column(JSON, nullable=True)
+    open_to_relocation = Column(Boolean, default=False)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    user = relationship("User", backref="preferences")

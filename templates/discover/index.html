@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Discover Jobs — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="discover-page">
+    <div class="discover-header">
+        <h1>Discover</h1>
+        <p>Jobs matched to your preferences.</p>
+        <a href="/discover/preferences" class="btn">Edit preferences</a>
+    </div>
+
+    {% if not preferences %}
+    <div class="empty-state">
+        <p>You haven't set any job preferences yet.</p>
+        <a href="/discover/preferences" class="btn">Set preferences</a>
+    </div>
+    {% elif not jobs %}
+    <div class="empty-state">
+        <p>No jobs matched your preferences yet. Check back as new listings are added.</p>
+        <a href="/discover/preferences" class="btn-secondary">Update preferences</a>
+    </div>
+    {% else %}
+    <div class="jobs-list">
+        {% for job in jobs %}
+        <a href="/jobs/{{ job.id }}" class="job-card">
+            <div class="job-card-header">
+                <div>
+                    <div class="job-title">{{ job.title }}</div>
+                    <div class="job-company">{{ job.company_name }}</div>
+                </div>
+                <div class="job-card-score">
+                    <span class="score-badge score-badge--{{ job.verdict }}">
+                        {% if job.verdict == 'pass' %}Verified
+                        {% elif job.verdict == 'warn' %}Warning
+                        {% else %}Flagged
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
