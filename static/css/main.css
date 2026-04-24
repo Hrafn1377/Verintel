@@ -51,6 +51,10 @@ nav {
     color: var(--color-text);
 }
 
+.logo img {
+    display: block
+}
+
 nav ul {
     list-style: none;
     display: flex;
