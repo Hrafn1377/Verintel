@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Verintel - Find legitimate jobs{% endblock %}
+{% block meta_description %}Verintel scores and verifies job postings, flags scam recruiters, and protects job seekers from fraudulent listings. Free to use.{% endblock %}
+
+{% block og_title %}Verintel — Find jobs you can trust{% endblock %}
+
+{% block og_description %}Verintel scores and verifies job postings, flags scam recruiters, and protects job seekers from fraudulent listings.{% endblock %}
+
+{% block og_type %}website{% endblock %}
+
+{% block og_url %}https://verintel.com{% endblock %}
+
+{% block canonical %}https://verintel.com{% endblock %}
 
 {% block content %}
 <section class="hero">
@@ -9,7 +19,7 @@
     <a href="/jobs" class="btn">Browse verified jobs</a>
 </section>
 
-<section class="verify-cta">
+<section class="verify-cta" id="verify-cta">
     <h2>Verify a job posting</h2>
     <p>Found a posting elsewhere? Paste it here and we'll score it.</p>
     <form hx-post="/verify/posting"
