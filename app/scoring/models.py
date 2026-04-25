@@ -25,7 +25,8 @@ class TrustReport:
     overall_score: float = 0.0
     signals: list[ScoreSignal] = field(default_factory=list)
     summary: str = ""
-
+    
+    
     def compute(self):
         if not self.signals:
             return self

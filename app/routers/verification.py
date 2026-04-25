@@ -10,6 +10,8 @@ from scoring.engine import score_company, score_recruiter, score_posting
 import uuid
 from slowapi import Limiter
 from slowapi.util import get_remote_address
+from auth.dependencies import get_optional_user
+from audit import log_action
 
 templates = Jinja2Templates(directory="templates")
 
@@ -74,7 +76,8 @@ def persist_report(report, db: Session):
 async def verify_company(
     payload: CompanyRequest,
     request: Request,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user = Depends(get_optional_user),
 ):
     ip = request.client.host
     report = await score_company(
@@ -87,6 +90,14 @@ async def verify_company(
         registered_name=payload.registered_name,
     )
     persist_report(report, db)
+    log_action(
+        db,
+        action="verification.company",
+        user_id=current_user.id if current_user else None,
+        ip_address=request.client.host,
+        resource=payload.company_name,
+        details=f"score={report.overall_score:.2f} verdict={'pass' if report.overall_score >= 0.6 else 'warn' if report.overall_score >= 0.4 else 'fail'}",
+    )
     return report
 
 
@@ -95,7 +106,8 @@ async def verify_company(
 async def verify_recruiter(
     payload: RecruiterRequest,
     request: Request,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user = Depends(get_optional_user),
 ):
     ip = request.client.host
     report = await score_recruiter(
@@ -106,6 +118,14 @@ async def verify_recruiter(
         ip=ip,
     )
     persist_report(report, db)
+    log_action(
+        db,
+        action="verification.recruiter",
+        user_id=current_user.id if current_user else None,
+        ip_address=request.client.host,
+        resource=payload.recruiter_email,
+        details=f"score={report.overall_score:.2f} verdict={'pass' if report.overall_score >= 0.6 else 'warn' if report.overall_score >= 0.4 else 'fail'}",
+    )
     return report
 
 
@@ -114,6 +134,7 @@ async def verify_recruiter(
 async def verify_posting(
     request: Request,
     db: Session = Depends(get_db),
+    current_user = Depends(get_optional_user),
     posting_text: str = Form(...),
     company_name: str = Form(...),
     domain: str = Form(...),
@@ -136,6 +157,14 @@ async def verify_posting(
         ip=ip,
     )
     persist_report(report, db)
+    log_action(
+        db,
+        action="verification.posting",
+        user_id=current_user.id if current_user else None,
+        ip_address=request.client.host,
+        resource=company_name,
+        details=f"score={report.overall_score:.2f} verdict={'pass' if report.overall_score >= 0.6 else 'warn' if report.overall_score >= 0.4 else 'fail'}",
+    )
     return templates.TemplateResponse(
     request=request,
     name="partials/trust_report.html",
