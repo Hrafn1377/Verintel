@@ -1443,3 +1443,64 @@ button.btn-danger:hover {
     color: var(--color-text-muted);
     line-height: 1.8;
 }
+
+/* about page */
+.about-page {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.about-header {
+    margin-bottom: 2rem;
+}
+
+.about-header h1 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.about-header p {
+    color: var(--color-text-muted);
+}
+
+.about-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.about-section {
+    background: var(--color-surface);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+}
+
+.about-section h2 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.5px solid var(--color-border);
+}
+
+.about-section p {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+}
+
+.about-section p:last-child {
+    margin-bottom: 0;
+}
+
+.about-section a {
+    color: var(--color-text);
+    text-decoration: underline;
+}
+
+.about-section a:hover {
+    color: var(--color-text-muted);
+}

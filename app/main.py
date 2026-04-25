@@ -82,6 +82,13 @@ async def faq_page(request: Request, current_user = Depends(get_optional_user)):
         context={"user": current_user}
     )
 
+@app.get("/about")
+async def about_page(request: Request, current_user = Depends(get_optional_user)):
+    return templates.TemplateResponse(
+        request=request,
+        name="about.html",
+        context={"user": current_user}
+    )
 
 @app.get("/sitemap.xml")
 async def sitemap(db: Session = Depends(get_db)):
