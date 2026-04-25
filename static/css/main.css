@@ -1305,3 +1305,141 @@ button.btn-danger:hover {
     background: var(--color-surface);
     color: var(--color-text);
 }
+
+/* help page */
+.help-page {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.help-header {
+    margin-bottom: 2rem;
+}
+
+.help-header h1 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.help-header p {
+    color: var(--color-text-muted);
+}
+
+.help-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.help-section {
+    background: var(--color-surface);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+}
+
+.help-section h2 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.5px solid var(--color-border);
+}
+
+.help-item {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 0.5px solid var(--color-border);
+}
+
+.help-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.help-item h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+}
+
+.help-item p {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+}
+
+/* faq page */
+.faq-page {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.faq-header {
+    margin-bottom: 2rem;
+}
+
+.faq-header h1 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.faq-header p {
+    color: var(--color-text-muted);
+}
+
+.faq-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.faq-section {
+    background: var(--color-surface);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+}
+
+.faq-section h2 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.5px solid var(--color-border);
+}
+
+.faq-item {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 0.5px solid var(--color-border);
+}
+
+.faq-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.faq-item h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+}
+
+.faq-item p {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+}
+
+.faq-item ul {
+    margin-top: 0.5rem;
+    padding-left: 1.25rem;
+    font-size: 14px;
+    color: var(--color-text-muted);
+    line-height: 1.8;
+}
