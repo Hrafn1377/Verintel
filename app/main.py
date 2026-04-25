@@ -66,6 +66,23 @@ async def root(request: Request, current_user = Depends(get_optional_user)):
     )
 
 
+@app.get("/help")
+async def help_page(request: Request, current_user = Depends(get_optional_user)):
+    return templates.TemplateResponse(
+        request=request,
+        name="help.html",
+        context={"user": current_user}
+    )
+
+@app.get("/faq")
+async def faq_page(request: Request, current_user = Depends(get_optional_user)):
+    return templates.TemplateResponse(
+        request=request,
+        name="faq.html",
+        context={"user": current_user}
+    )
+
+
 @app.get("/sitemap.xml")
 async def sitemap(db: Session = Depends(get_db)):
     from db.models import JobPosting, EmployerReview
