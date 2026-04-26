@@ -90,6 +90,30 @@ async def about_page(request: Request, current_user = Depends(get_optional_user)
         context={"user": current_user}
     )
 
+@app.get("/privacy")
+async def privacy_page(request: Request, current_user = Depends(get_optional_user)):
+    return templates.TemplateResponse(
+        request=request,
+        name="privacy.html",
+        context={"user": current_user}
+    )
+
+@app.get("/contact")
+async def contact_page(request: Request, current_user = Depends(get_optional_user)):
+    return templates.TemplateResponse(
+        request=request,
+        name="contact.html",
+        context={"user": current_user}
+    )
+
+@app.get("/terms")
+async def terms_page(request: Request, current_user = Depends(get_optional_user)):
+    return templates.TemplateResponse(
+        request=request,
+        name="terms.html",
+        context={"user": current_user}
+    )
+
 @app.get("/sitemap.xml")
 async def sitemap(db: Session = Depends(get_db)):
     from db.models import JobPosting, EmployerReview
@@ -98,6 +122,12 @@ async def sitemap(db: Session = Depends(get_db)):
         "https://verintel.com",
         "https://verintel.com/jobs",
         "https://verintel.com/reviews",
+        "https://verintel.com/about",
+        "https://verintel.com/help",
+        "https://verintel.com/faq",
+        "https://verintel.com/contact",
+        "https://verintel.com/privacy",
+        "https://verintel.com/terms",
     ]
 
     companies = db.query(EmployerReview.company_name).distinct().all()

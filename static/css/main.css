@@ -1577,3 +1577,70 @@ button.btn-danger:hover {
 .legal-section a:hover {
     color: var(--color-text-muted);
 }
+
+/* contact page */
+.contact-page {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.contact-header {
+    margin-bottom: 2rem;
+}
+
+.contact-header h1 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.contact-header p {
+    color: var(--color-text-muted);
+}
+
+.contact-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.contact-section {
+    background: var(--color-surface);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+}
+
+.contact-section h2 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.5px solid var(--color-border);
+}
+
+.contact-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contact-method h3 {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.contact-method p {
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+.contact-method a {
+    color: var(--color-text);
+    text-decoration: underline;
+}
+
+.contact-method a:hover {
+    color: var(--color-text-muted);
+}
