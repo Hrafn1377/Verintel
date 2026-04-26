@@ -20,6 +20,7 @@ def detect_fraud_patterns(report: TrustReport) -> TrustReport:
     incomplete_posting = signals_by_label.get("Incomplete posting")
     salary_transparency = signals_by_label.get("Salary transparency")
     currency_conversion = signals_by_label.get("Currency conversion check")
+    phone_country = signals_by_label.get("Phone country")
 
     fraud_indicators = []
 
@@ -43,6 +44,9 @@ def detect_fraud_patterns(report: TrustReport) -> TrustReport:
 
     if currency_conversion and currency_conversion.verdict == Verdict.FAIL:
         fraud_indicators.append("salary matches foreign currency conversion")
+
+    if phone_country and phone_country.verdict == Verdict.WARN:
+        fraud_indicators.append("phone number country mismatch")
     
     if len(fraud_indicators) >= 3:
         report.signals.append(ScoreSignal(

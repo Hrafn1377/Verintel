@@ -11,6 +11,7 @@ COUNTRY_CODE_MAP = {
     "de": ["de"],
     "fr": ["fr"],
     "ie": ["ie"],
+    "in": ["in"],
 }
 
 TLD_COUNTRY_MAP = {
@@ -22,6 +23,7 @@ TLD_COUNTRY_MAP = {
     ".de": "de",
     ".fr": "fr",
     ".ie": "ie",
+    ".in": "in",
 }
 
 
@@ -76,6 +78,7 @@ async def check_ip_geolocation(ip: str, claimed_country: str) -> ScoreSignal:
     
 
 def check_domain_tld(domain: str, claimed_country: str) -> ScoreSignal:
+    
     claimed_clean = claimed_country.lower().strip()
     domain_clean = domain.lower().strip()
 
@@ -113,12 +116,49 @@ def check_domain_tld(domain: str, claimed_country: str) -> ScoreSignal:
 
 def check_phone_country(phone: str, claimed_country: str) -> ScoreSignal:
     try:
-        parsed = phonenumbers.parse(phone, None)
-        phone_region = geocoder.region_codes_for_number(parsed)
         claimed_clean = claimed_country.lower().strip()
-        expected - COUNTRY_CODE_MAP.get(claimed_clean, [claimed_clean])
+        phone = phone.strip().replace(" ", "").replace("-", "")
+        
+        try:
+            parsed = phonenumbers.parse(phone, None)
+        except Exception as e:
+            region_hint = claimed_clean.upper()
+            try:
+                parsed = phonenumbers.parse(phone, region_hint)
+            except Exception as e2:
+                return ScoreSignal(
+                    label="Phone country",
+                    verdict=Verdict.WARN,
+                    weight=0.3,
+                    score=0.3,
+                    reason=f"Could not parse phone number. Error: {str(e2)}",
+                    source="Phone check"
+                )
 
-        match = any(r.lower() in expected for r in phone_region)
+        if not phonenumbers.is_valid_number(parsed):
+            return ScoreSignal(
+                label="Phone country",
+                verdict=Verdict.WARN,
+                weight=0.3,
+                score=0.3,
+                reason="Phone number could not be validated.",
+                source="Phone check"
+            )
+
+        phone_region = geocoder.region_code_for_number(parsed)
+        expected = COUNTRY_CODE_MAP.get(claimed_clean, [claimed_clean])
+
+        if not phone_region:
+            return ScoreSignal(
+                label="Phone country",
+                verdict=Verdict.WARN,
+                weight=0.3,
+                score=0.1,
+                reason=f"Could not determine region from phone number. Claimed country: {claimed_country.upper()}.",
+                source="phone check",
+            )
+
+        match = phone_region.lower() in expected
 
         if match:
             return ScoreSignal(
@@ -130,16 +170,18 @@ def check_phone_country(phone: str, claimed_country: str) -> ScoreSignal:
                 source="Phone check"
             )
 
+        
+    
         return ScoreSignal(
             label="Phone country",
             verdict=Verdict.WARN,
             weight=0.3,
-            score=0.3,
-            reason=f"Phone number country code does not match claimed location ({claimed_country.upper()}). Regions detected: {', '.join(phone_region)}.",
+            score=0.1,
+            reason=f"Phone number country code does not match claimed location ({claimed_country.upper()}). Region detected: {phone_region}.",
             source="Phone check"
         )
 
-    except Exception:
+    except Exception as e:
         return ScoreSignal(
             label="Phone country",
             verdict=Verdict.WARN,
@@ -148,7 +190,6 @@ def check_phone_country(phone: str, claimed_country: str) -> ScoreSignal:
             reason="Could not parse phone number to verify country.",
             source="Phone check"
         )
-
 
 async def run_location_checks(
     claimed_country: str,
