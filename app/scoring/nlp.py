@@ -361,7 +361,7 @@ async def check_currency_conversion(text: str) -> ScoreSignal:
 
     for currency, rate in rates.items():
         converted = max_salary / rate
-        if 20000 <= converted <= 150000:
+        if 5000 <= converted <= 150000:
             suspicious_currencies.append(currency)
 
     if suspicious_currencies:
