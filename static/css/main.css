@@ -1504,3 +1504,76 @@ button.btn-danger:hover {
 .about-section a:hover {
     color: var(--color-text-muted);
 }
+
+/* legal pages (privacy & terms) */
+.legal-page {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.legal-header {
+    margin-bottom: 2rem;
+}
+
+.legal-header h1 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.legal-header p {
+    color: var(--color-text-muted);
+    font-size: 13px;
+}
+
+.legal-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.legal-section {
+    background: var(--color-surface);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+}
+
+.legal-section h2 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.5px solid var(--color-border);
+}
+
+.legal-section p {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+}
+
+.legal-section p:last-child {
+    margin-bottom: 0;
+}
+
+.legal-section ul {
+    padding-left: 1.25rem;
+    margin: 0.5rem 0 0.75rem;
+}
+
+.legal-section ul li {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    line-height: 1.8;
+}
+
+.legal-section a {
+    color: var(--color-text);
+    text-decoration: underline;
+}
+
+.legal-section a:hover {
+    color: var(--color-text-muted);
+}
