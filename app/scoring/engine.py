@@ -19,6 +19,7 @@ def detect_fraud_patterns(report: TrustReport) -> TrustReport:
     domain_age = signals_by_label.get("Domain age")
     incomplete_posting = signals_by_label.get("Incomplete posting")
     salary_transparency = signals_by_label.get("Salary transparency")
+    currency_conversion = signals_by_label.get("Currency conversion check")
 
     fraud_indicators = []
 
@@ -39,6 +40,9 @@ def detect_fraud_patterns(report: TrustReport) -> TrustReport:
 
     if salary_transparency and salary_transparency.verdict == Verdict.FAIL:
         fraud_indicators.append("fraudulent salary figures")
+
+    if currency_conversion and currency_conversion.verdict == Verdict.FAIL:
+        fraud_indicators.append("salary matches foreign currency conversion")
     
     if len(fraud_indicators) >= 3:
         report.signals.append(ScoreSignal(
@@ -161,7 +165,7 @@ async def score_posting(
         overall_score=0.0,
     )
 
-    report.signals.extend(run_nlp_checks(posting_text))
+    report.signals.extend(await run_nlp_checks(posting_text))
     report.signals.append(check_domain(domain))
     report.signals.extend(
         await run_company_checks(company_name, claimed_country)

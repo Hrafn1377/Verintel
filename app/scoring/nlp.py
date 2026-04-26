@@ -301,7 +301,91 @@ def check_incomplete_fields(text: str) -> ScoreSignal:
     )
 
 
-def run_nlp_checks(posting_text: str) -> list[ScoreSignal]:
+async def check_currency_conversion(text: str) -> ScoreSignal:
+    import httpx
+
+    doc = nlp(text)
+    money_entities = [ent.text for ent in doc.ents if ent.label_ == "MONEY"]
+
+    if not money_entities:
+        return ScoreSignal(
+            label="Currency conversion check",
+            verdict=Verdict.PASS,
+            weight=0.2,
+            score=1.0,
+            reason="No salary figures found to check for currency conversion.",
+            source="Frankfurter API",
+        )
+
+    amounts = []
+    for money in money_entities:
+        amount = extract_max_salary(money)
+        if amount and amount > 1000:
+            amounts.append(amount)
+
+    if not amounts:
+        return ScoreSignal(
+            label="Currency conversion check",
+            verdict=Verdict.PASS,
+            weight=0.2,
+            score=1.0,
+            reason="Salary figures could not be parsed for conversion check.",
+            source="Frankfurter API",
+        )
+
+    max_salary = max(amounts)
+
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                "https://api.frankfurter.dev/v2/rates",
+                params={
+                    "base": "USD",
+                    "quotes": "INR,JPY,PKR,NGN,PHP,BDT,IDR,VND,MMK,LKR,NPR,KES,GHS,UGX,TZS,ETB"
+                },
+                timeout=5.0
+            )
+            data = response.json()
+    except Exception:
+        return ScoreSignal(
+            label="Currency conversion check",
+            verdict=Verdict.PASS,
+            weight=0.2,
+            score=0.8,
+            reason="Currency conversion check could not be completed. Manual review recommended.",
+            source="Frankfurter API",
+        )
+
+    rates = {item["quote"]: item["rate"] for item in data}
+    suspicious_currencies = []
+
+    for currency, rate in rates.items():
+        converted = max_salary / rate
+        if 20000 <= converted <= 150000:
+            suspicious_currencies.append(currency)
+
+    if suspicious_currencies:
+        return ScoreSignal(
+            label="Currency conversion check",
+            verdict=Verdict.FAIL,
+            weight=0.2,
+            score=0.0,
+            reason=f"Posted salary of {max_salary:,} appears to match a realistic salary when converted from {', '.join(suspicious_currencies)}. This is a common tactic used to make low foreign salaries appear as high USD figures.",
+            source="Frankfurter API",
+        )
+
+    return ScoreSignal(
+        label="Currency conversion check",
+        verdict=Verdict.PASS,
+        weight=0.2,
+        score=1.0,
+        reason="Salary figures do not match known currency conversion patterns.",
+        source="Frankfurter API",
+    )
+
+
+async def run_nlp_checks(posting_text: str) -> list[ScoreSignal]:
+    currency_signal = await check_currency_conversion(posting_text)
     return [
         check_vague_language(posting_text),
         check_urgency(posting_text),
@@ -309,4 +393,6 @@ def run_nlp_checks(posting_text: str) -> list[ScoreSignal]:
         check_salary_vagueness(posting_text),
         check_salary_sanity(posting_text),
         check_incomplete_fields(posting_text),
+        currency_signal,
     ]
+
