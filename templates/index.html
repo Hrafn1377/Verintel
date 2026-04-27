@@ -32,7 +32,16 @@
                   required></textarea>
         <input type="text" name="company_name" placeholder="Company name" required>
         <input type="text" name="domain" placeholder="Company website (e.g., acme.com)" required>
-        <input type="text" name="claimed_country" placeholder="Country (e.g., us, gb)" value="us">
+        <select name="claimed_country">
+           <option value="us" selected>United States</option>
+           <option value="gb">United Kingdom</option>
+           <option value="ca">Canada</option>
+           <option value="au">Australia</option>
+           <option value="de">Germany</option>
+           <option value="fr">France</option>
+           <option value="ie">Ireland</option>
+           <option value="in">India</option>
+        </select>
         <input type="text" name="phone" placeholder="Company phone number (e.g., +1 555 123 4567)">
         <button id="verify-spinner" class="htmx-indicator">Checking...</button>          
     </form>
