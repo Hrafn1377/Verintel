@@ -114,6 +114,14 @@ async def terms_page(request: Request, current_user = Depends(get_optional_user)
         context={"user": current_user}
     )
 
+@app.get("/hall-of-shame")
+async def hall_of_shame_page(request: Request, current_user = Depends(get_optional_user)):
+    return templates.TemplateResponse(
+        request=request,
+        name="hall_of_shame.html",
+        context={"user": current_user}
+    )
+
 @app.get("/sitemap.xml")
 async def sitemap(db: Session = Depends(get_db)):
     from db.models import JobPosting, EmployerReview

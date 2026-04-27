@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Hall of Shame — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="index, follow">{% endblock %}
+
+{% block content %}
+<div class="hall-of-shame-page">
+    <div class="hall-of-shame-header">
+        <h1>Hall of Shame</h1>
+        <p>Verified scam companies, fraudulent job postings, and predatory recruiters caught by Verintel's verification engine. Every entry is backed by data.</p>
+    </div>
+
+    <div class="hall-of-shame-notice">
+        <p>All entries on this page are based on factual verification results. Data is sourced directly from company websites, public business registries, and Verintel's automated checks. Truth is our standard.</p>
+    </div>
+
+    <div class="hall-of-shame-entries">
+
+        <div class="shame-card shame-card--fail">
+            <div class="shame-card-header">
+                <div class="shame-card-identity">
+                    <h2>WebDigiSoft</h2>
+                    <span class="shame-domain">webdigisoft.com</span>
+                </div>
+                <div class="shame-score">
+                    <span class="score-badge score-badge--fail">Flagged</span>
+                    <span class="score-number score-number--fail">35%</span>
+                </div>
+            </div>
+            <div class="shame-card-body">
+                <p class="shame-summary">Fraud pattern detected — this posting shows multiple characteristics of a scam. Do not apply.</p>
+                <div class="shame-indicators">
+                    <span class="flag flag--fail">Unrealistic salary</span>
+                    <span class="flag flag--fail">Not found in business registry</span>
+                    <span class="flag flag--fail">Currency conversion mismatch</span>
+                    <span class="flag flag--fail">Phone number country mismatch</span>
+                    <span class="flag flag--warn">Vague language</span>
+                    <span class="flag flag--warn">Incomplete posting</span>
+                </div>
+                <div class="shame-evidence">
+                    <h3>Evidence</h3>
+                    <ul>
+                        <li>Claims to be US-based but phone number is +91 (India)</li>
+                        <li>Salary of $549,824–$732,972 matches INR conversion at current exchange rates</li>
+                        <li>Not found in US or India business registry</li>
+                        <li>IP geolocation inconclusive — possible VPN use</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

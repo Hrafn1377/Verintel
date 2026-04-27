@@ -1670,3 +1670,125 @@ footer {
 .footer-links a:hover {
     color: var(--color-text);
 }
+
+/* hall of shame page */
+.hall-of-shame-page {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.hall-of-shame-header {
+    margin-bottom: 1.5rem;
+}
+
+.hall-of-shame-header h1 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.hall-of-shame-header p {
+    color: var(--color-text-muted);
+}
+
+.hall-of-shame-notice {
+    background: var(--color-fail-bg);
+    border: 0.5px solid var(--color-fail);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 2rem;
+}
+
+.hall-of-shame-notice p {
+    font-size: 13px;
+    color: var(--color-fail);
+}
+
+.hall-of-shame-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.shame-card {
+    background: var(--color-surface);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.shame-card--fail {
+    border-left: 3px solid var(--color-fail);
+}
+
+.shame-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.25rem;
+    border-bottom: 0.5px solid var(--color-border);
+    gap: 1rem;
+}
+
+.shame-card-identity h2 {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.shame-domain {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.shame-score {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.shame-card-body {
+    padding: 1.25rem;
+}
+
+.shame-summary {
+    font-size: 14px;
+    color: var(--color-fail);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.shame-indicators {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+}
+
+.shame-evidence {
+    background: var(--color-bg);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem;
+}
+
+.shame-evidence h3 {
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.shame-evidence ul {
+    padding-left: 1.25rem;
+}
+
+.shame-evidence ul li {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    line-height: 1.8;
+}
