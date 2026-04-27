@@ -145,3 +145,14 @@ class JobPreferences(Base):
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     user = relationship("User", backref="preferences")
+
+class ContactSubmission(Base):
+    __tablename__ = "contact_submissions"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False)
+    email = Column(String, nullable=False)
+    subject = Column(String, nullable=True)
+    message = Column(Text, nullable=False)
+    is_read = Column(Boolean, default=False)
+    created_at = Column(DateTime, server_default=func.now())

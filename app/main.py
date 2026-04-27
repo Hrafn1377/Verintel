@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, Depends, Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import Response as FastAPIResponse
@@ -104,6 +104,33 @@ async def contact_page(request: Request, current_user = Depends(get_optional_use
         request=request,
         name="contact.html",
         context={"user": current_user}
+    )
+
+@app.post("/contact")
+async def contact_submit(
+    request: Request,
+    db: Session = Depends(get_db),
+    name: str = Form(...),
+    email: str = Form(...),
+    subject: str = Form(None),
+    message: str = Form(...),
+):
+    from db.models import ContactSubmission
+    submission = ContactSubmission(
+        name=name,
+        email=email,
+        subject=subject,
+        message=message,
+    )
+    db.add(submission)
+    db.commit()
+    return templates.TemplateResponse(
+        request=request,
+        name="contact.html",
+        context={
+            "user": None,
+            "success": True,
+        }
     )
 
 @app.get("/terms")

@@ -12,6 +12,12 @@
 
     <div class="contact-sections">
 
+        {% if success %}
+        <div class="auth-success">
+            Your message has been sent. We'll get back to you within 24 hours.
+        </div>
+        {% endif %}
+
         <div class="contact-section">
             <h2>Send a Message</h2>
             <form method="POST" action="/contact">
