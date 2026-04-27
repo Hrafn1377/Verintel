@@ -136,6 +136,7 @@ async def sitemap(db: Session = Depends(get_db)):
         "https://verintel.com/contact",
         "https://verintel.com/privacy",
         "https://verintel.com/terms",
+        "https://verintel.com/hall-of-shame",
     ]
 
     companies = db.query(EmployerReview.company_name).distinct().all()
