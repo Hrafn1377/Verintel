@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Post a Job — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="post-job-page">
+    <div class="post-job-header">
+        <h1>Post a Job</h1>
+        <p>Your first posting is free. All listings go through verification before going live.</p>
+    </div>
+
+    <div class="post-job-form">
+        <form method="POST" action="/employer/post-job">
+            <div class="form-group">
+                <label for="title">Job Title</label>
+                <input type="text" id="title" name="title" placeholder="e.g. Senior Software Engineer" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Job Description</label>
+                <textarea id="description" name="description" rows="10" placeholder="Describe the role, responsibilities, and requirements..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" placeholder="e.g. New York, NY or Remote">
+            </div>
+            <div class="form-group">
+                <label for="job_type">Job Type</label>
+                <select id="job_type" name="job_type">
+                    <option value="">Select job type</option>
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Freelance">Freelance</option>
+                    <option value="Internship">Internship</option>
+                </select>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="salary_min">Salary Min (USD)</label>
+                    <input type="text" id="salary_min" name="salary_min" placeholder="e.g. 60000">
+                </div>
+                <div class="form-group">
+                    <label for="salary_max">Salary Max (USD)</label>
+                    <input type="text" id="salary_max" name="salary_max" placeholder="e.g. 80000">
+                </div>
+            </div>
+            <button type="submit" class="btn">Submit for Verification</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

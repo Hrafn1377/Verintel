@@ -17,6 +17,7 @@ from routers.github import router as github_router
 from routers.reviews import router as reviews_router
 from routers.discover import router as discover_router
 from routers.cv import router as cv_router
+from routers.employer import router as employer_router
 from urllib.parse import quote
 
 Base.metadata.create_all(bind=engine)
@@ -55,6 +56,7 @@ app.include_router(github_router)
 app.include_router(reviews_router)
 app.include_router(cv_router)
 app.include_router(discover_router)
+app.include_router(employer_router)
 
 
 @app.get("/")

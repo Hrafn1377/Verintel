@@ -156,3 +156,40 @@ class ContactSubmission(Base):
     message = Column(Text, nullable=False)
     is_read = Column(Boolean, default=False)
     created_at = Column(DateTime, server_default=func.now())
+
+class Employer(Base):
+    __tablename__ = "employers"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False, unique=True)
+    company_name = Column(String, nullable=False)
+    company_domain = Column(String, nullable=True)
+    company_phone = Column(String, nullable=True)
+    company_country = Column(String, nullable=True)
+    is_verified = Column(Boolean, default=False)
+    subscription_tier = Column(String, nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    user = relationship("User", backref="employer")
+    job_postings = relationship("EmployerJobPosting", back_populates="employer")
+
+
+class EmployerJobPosting(Base):
+    __tablename__ = "employer_job_postings"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    employer_id = Column(String, ForeignKey("employers.id"), nullable=False)
+    title = Column(String, nullable=False)
+    description = Column(Text, nullable=False)
+    location = Column(String, nullable=True)
+    salary_min = Column(Float, nullable=True)
+    salary_max = Column(Float, nullable=True)
+    job_type = Column(String, nullable=True)
+    is_active = Column(Boolean, default=True)
+    verification_score = Column(Float, nullable=True)
+    verification_status = Column(String, nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    employer = relationship("Employer", back_populates="job_postings")

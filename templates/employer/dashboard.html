@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Employer Dashboard — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="employer-dashboard">
+    <div class="employer-dashboard-header">
+        <div>
+            <h1>{{ employer.company_name }}</h1>
+            <p>{{ employer.company_domain }}</p>
+        </div>
+        <a href="/employer/post-job" class="btn">Post a Job</a>
+    </div>
+
+    <div class="employer-stats">
+        <div class="employer-stat">
+            <span class="employer-stat-number">{{ postings|length }}</span>
+            <span class="employer-stat-label">Total Postings</span>
+        </div>
+        <div class="employer-stat">
+            <span class="employer-stat-number">{{ postings|selectattr('is_active', 'equalto', true)|list|length }}</span>
+            <span class="employer-stat-label">Active</span>
+        </div>
+        <div class="employer-stat">
+            <span class="employer-stat-number">{{ postings|selectattr('verification_status', 'equalto', 'pass')|list|length }}</span>
+            <span class="employer-stat-label">Verified</span>
+        </div>
+    </div>
+
+    {% if not postings %}
+    <div class="empty-state">
+        <p>You haven't posted any jobs yet.</p>
+        <a href="/employer/post-job" class="btn">Post your first job</a>
+    </div>
+    {% else %}
+    <div class="employer-postings">
+        {% for posting in postings %}
+        <div class="employer-posting-card">
+            <div class="employer-posting-header">
+                <div>
+                    <h2>{{ posting.title }}</h2>
+                    <span class="employer-posting-meta">
+                        {{ posting.location or "Location not specified" }}
+                        {% if posting.salary_min and posting.salary_max %}
+                        · ${{ "{:,.0f}".format(posting.salary_min) }} – ${{ "{:,.0f}".format(posting.salary_max) }}
+                        {% endif %}
+                        {% if posting.job_type %}
+                        · {{ posting.job_type }}
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="employer-posting-status">
+                    {% if posting.verification_status == 'pass' %}
+                    <span class="score-badge score-badge--pass">Verified</span>
+                    {% elif posting.verification_status == 'warn' %}
+                    <span class="score-badge score-badge--warn">Warning</span>
+                    {% elif posting.verification_status == 'fail' %}
+                    <span class="score-badge score-badge--fail">Flagged</span>
+                    {% else %}
+                    <span class="score-badge">Pending</span>
+                    {% endif %}
+                    {% if posting.is_active %}
+                    <span class="score-badge score-badge--pass">Active</span>
+                    {% else %}
+                    <span class="score-badge score-badge--fail">Inactive</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="employer-posting-actions">
+                <a href="/employer/posting/{{ posting.id }}/edit" class="btn-secondary">Edit</a>
+                <form method="POST" action="/employer/posting/{{ posting.id }}/deactivate" style="display:inline">
+                    <button type="submit" class="btn-secondary">
+                        {{ "Deactivate" if posting.is_active else "Reactivate" }}
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
