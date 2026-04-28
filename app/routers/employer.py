@@ -19,7 +19,7 @@ async def employer_register(request: Request, current_user=Depends(get_optional_
     return templates.TemplateResponse(
         request=request,
         name="employer/register.html",
-        context={"user", current_user}
+        context={"user": current_user}
     )
 
 
@@ -42,7 +42,7 @@ async def employer_register_submit(
     
     employer = Employer(
         user_id=current_user.id,
-        compant_name=company_name,
+        company_name=company_name,
         company_domain=company_domain,
         company_phone=company_phone,
         company_country=company_country,
@@ -117,7 +117,7 @@ async def post_job_submit(
     
     employer = db.query(Employer).filter(Employer.user_id == current_user.id).first()
     if not employer:
-        return RedirectResponse(url="/employer.register")
+        return RedirectResponse(url="/employer/register")
     
     posting = EmployerJobPosting(
         employer_id=employer.id,
