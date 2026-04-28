@@ -131,3 +131,97 @@ async def post_job_submit(
     db.add(posting)
     db.commit()
     return RedirectResponse(url="/employer/dashboard", status_code=303)
+
+@router.get("/posting/{posting_id}/edit")
+async def edit_posting(
+    posting_id: str,
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_optional_user),
+):
+    if not current_user:
+        return RedirectResponse(url="/auth/login")
+
+    employer = db.query(Employer).filter(Employer.user_id == current_user.id).first()
+    if not employer:
+        return RedirectResponse(url="/employer/register")
+
+    posting = db.query(EmployerJobPosting).filter(
+        EmployerJobPosting.id == posting_id,
+        EmployerJobPosting.employer_id == employer.id
+    ).first()
+
+    if not posting:
+        return RedirectResponse(url="/employer/dashboard")
+
+    return templates.TemplateResponse(
+        request=request,
+        name="employer/edit_posting.html",
+        context={"user": current_user, "employer": employer, "posting": posting}
+    )
+
+
+@router.post("/posting/{posting_id}/edit")
+async def edit_posting_submit(
+    posting_id: str,
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_optional_user),
+    title: str = Form(...),
+    description: str = Form(...),
+    location: Optional[str] = Form(None),
+    salary_min: Optional[float] = Form(None),
+    salary_max: Optional[float] = Form(None),
+    job_type: Optional[str] = Form(None),
+):
+    if not current_user:
+        return RedirectResponse(url="/auth/login")
+
+    employer = db.query(Employer).filter(Employer.user_id == current_user.id).first()
+    if not employer:
+        return RedirectResponse(url="/employer/register")
+
+    posting = db.query(EmployerJobPosting).filter(
+        EmployerJobPosting.id == posting_id,
+        EmployerJobPosting.employer_id == employer.id
+    ).first()
+
+    if not posting:
+        return RedirectResponse(url="/employer/dashboard")
+
+    posting.title = title
+    posting.description = description
+    posting.location = location
+    posting.salary_min = salary_min
+    posting.salary_max = salary_max
+    posting.job_type = job_type
+    posting.verification_status = None
+    db.commit()
+    return RedirectResponse(url="/employer/dashboard", status_code=303)
+
+
+@router.post("/posting/{posting_id}/deactivate")
+async def deactivate_posting(
+    posting_id: str,
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_optional_user),
+):
+    if not current_user:
+        return RedirectResponse(url="/auth/login")
+
+    employer = db.query(Employer).filter(Employer.user_id == current_user.id).first()
+    if not employer:
+        return RedirectResponse(url="/employer/register")
+
+    posting = db.query(EmployerJobPosting).filter(
+        EmployerJobPosting.id == posting_id,
+        EmployerJobPosting.employer_id == employer.id
+    ).first()
+
+    if not posting:
+        return RedirectResponse(url="/employer/dashboard")
+
+    posting.is_active = not posting.is_active
+    db.commit()
+    return RedirectResponse(url="/employer/dashboard", status_code=303)

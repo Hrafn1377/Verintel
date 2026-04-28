@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Job Posting — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="post-job-page">
+    <div class="post-job-header">
+        <h1>Edit Job Posting</h1>
+        <p>Changes to active listings will reset verification status.</p>
+    </div>
+
+    <div class="post-job-form">
+        <form method="POST" action="/employer/posting/{{ posting.id }}/edit">
+            <div class="form-group">
+                <label for="title">Job Title</label>
+                <input type="text" id="title" name="title" value="{{ posting.title }}" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Job Description</label>
+                <textarea id="description" name="description" rows="10" required>{{ posting.description }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" value="{{ posting.location or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="job_type">Job Type</label>
+                <select id="job_type" name="job_type">
+                    <option value="">Select job type</option>
+                    <option value="Full-time" {% if posting.job_type == 'Full-time' %}selected{% endif %}>Full-time</option>
+                    <option value="Part-time" {% if posting.job_type == 'Part-time' %}selected{% endif %}>Part-time</option>
+                    <option value="Contract" {% if posting.job_type == 'Contract' %}selected{% endif %}>Contract</option>
+                    <option value="Freelance" {% if posting.job_type == 'Freelance' %}selected{% endif %}>Freelance</option>
+                    <option value="Internship" {% if posting.job_type == 'Internship' %}selected{% endif %}>Internship</option>
+                </select>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="salary_min">Salary Min (USD)</label>
+                    <input type="text" id="salary_min" name="salary_min" value="{{ posting.salary_min or '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="salary_max">Salary Max (USD)</label>
+                    <input type="text" id="salary_max" name="salary_max" value="{{ posting.salary_max or '' }}">
+                </div>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button type="submit" class="btn">Save Changes</button>
+                <a href="/employer/dashboard" class="btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
