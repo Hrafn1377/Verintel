@@ -15,6 +15,7 @@ COUNTRY_CODE_MAP = {
     "ie": ["ie"],
     "in": ["in"],
     "no": ["no"],
+    "ph": ["ph"],
 }
 
 TLD_COUNTRY_MAP = {
@@ -28,6 +29,7 @@ TLD_COUNTRY_MAP = {
     ".ie": "ie",
     ".in": "in",
     ".no": "no",
+    ".ph": "ph",
 }
 
 
