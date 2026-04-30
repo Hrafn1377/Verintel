@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Verintel{% endblock %}
+{% block robots%}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="admin-header">
+        <h1>Admin Dashboard</h1>
+        <p>Verintel platform overview.</p>
+    </div>
+
+    <div class="admin-stats">
+        <div class="admin-stat">
+            <span class="admin-stat-number">{{ total_users }}</span>
+            <span class="admin-stat-label">Total Users</span>
+        </div>
+        <div class="admin-stat">
+            <span class="admin-stat-number">{{ total_employers }}</span>
+            <span class="admin-stat-label">Employers</span>
+        </div>
+        <div class="admin-stat-number">{{ total_postings }}</div>
+        <span class="admin-stat-label">Job Postings</span>
+    </div>
+    <div class="admin-stat {% if flagged_postings > 0 %}admin-stat--alert{% endif %}">
+        <span class="admin-stat-number">{{ flagged_postings }}</span>
+        <span class="admin-stat-label">Flagged Psotings</span>
+    </div>
+    <div class="admin-stat {% if unread_contacts > 0 %}admin-stat--alert{% endif %}">
+        <span class="admin-stat-number">{{ unread_contacts }}</span>
+        <span class="admin-stat-label">Unread Contacts</span>
+    </div>
+</div>
+
+<div class="admin-nav">
+    <a href="/admin/contacts" class="admin-nav-item">
+        <h2>Contact Submissions</h2>
+        <p>View and manage contact form submissions.</p>
+        {% if unread_contacts > 0 %}
+        <span class="score-badge score-badge--warn">{{ unread_contacts }} unread</span>
+        {% endif %}
+    </a>
+    <a href="/admin/postings" class="admin-nav-item">
+        <h2>Job Postings</h2>
+        <p>Review all employer job postings and verification status.</p>
+        {% if flagged_postings > 0 %}
+        <span class="score-badge score-badge--fail">{{ flagged_postings }} flagged</span>
+        {% endif %}
+    </a>
+    <a href="/admin/employers" class="admin-nav-item">
+        <h2>Employers</h2>
+        <p>View all registered employer accounts.</p>
+    </a>
+</div>
+{% endblock %}

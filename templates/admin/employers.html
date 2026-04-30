@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Employers — Verintel Admin{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="admin-header">
+        <h1>Employers</h1>
+        <a href="/admin" class="btn-secondary">← Back to Dashboard</a>
+    </div>
+
+    {% if not employers %}
+    <div class="empty-state">
+        <p>No employer accounts yet.</p>
+    </div>
+    {% else %}
+    <div class="admin-list">
+        {% for employer in employers %}
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <div>
+                    <h2>{{ employer.company_name }}</h2>
+                    <span class="admin-card-meta">
+                        {{ employer.company_domain }}
+                        {% if employer.company_country %}
+                        · {{ employer.company_country.upper() }}
+                        {% endif %}
+                        {% if employer.company_phone %}
+                        · {{ employer.company_phone }}
+                        {% endif %}
+                        · Joined {{ employer.created_at.strftime("%b %d, %Y") }}
+                    </span>
+                </div>
+                <div class="admin-card-actions">
+                    {% if employer.is_verified %}
+                    <span class="score-badge score-badge--pass">Verified</span>
+                    {% else %}
+                    <span class="score-badge score-badge--warn">Unverified</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

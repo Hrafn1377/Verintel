@@ -19,6 +19,7 @@ from routers.discover import router as discover_router
 from routers.cv import router as cv_router
 from routers.employer import router as employer_router
 from urllib.parse import quote
+from routers.admin import router as admin_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -57,6 +58,7 @@ app.include_router(reviews_router)
 app.include_router(cv_router)
 app.include_router(discover_router)
 app.include_router(employer_router)
+app.include_router(admin_router)
 
 
 @app.get("/")

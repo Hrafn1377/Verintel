@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Submissions — Verintel Admin{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="admin-header">
+        <h1>Contact Submissions</h1>
+        <a href="/admin" class="btn-secondary">← Back to Dashboard</a>
+    </div>
+
+    {% if not submissions %}
+    <div class="empty-state">
+        <p>No contact submissions yet.</p>
+    </div>
+    {% else %}
+    <div class="admin-list">
+        {% for submission in submissions %}
+        <div class="admin-card {% if not submission.is_read %}admin-card--unread{% endif %}">
+            <div class="admin-card-header">
+                <div>
+                    <h2>{{ submission.name }}</h2>
+                    <span class="admin-card-meta">{{ submission.email }} · {{ submission.subject or "No subject" }} · {{ submission.created_at.strftime("%b %d, %Y %I:%M %p") }}</span>
+                </div>
+                <div class="admin-card-actions">
+                    {% if not submission.is_read %}
+                    <span class="score-badge score-badge--warn">Unread</span>
+                    {% else %}
+                    <span class="score-badge">Read</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="admin-card-body">
+                <p>{{ submission.message }}</p>
+            </div>
+            {% if not submission.is_read %}
+            <div class="admin-card-footer">
+                <form method="POST" action="/admin/contacts/{{ submission.id }}/read">
+                    <button type="submit" class="btn-secondary">Mark as Read</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
