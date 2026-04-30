@@ -6,6 +6,7 @@ from typing import Optional
 from db.session import get_db
 from db.models import Employer, EmployerJobPosting
 from auth.dependencies import get_optional_user
+from scoring.engine import score_posting
 
 templates = Jinja2Templates(directory="templates")
 
@@ -114,11 +115,11 @@ async def post_job_submit(
 ):
     if not current_user:
         return RedirectResponse(url="/auth/login")
-    
+
     employer = db.query(Employer).filter(Employer.user_id == current_user.id).first()
     if not employer:
         return RedirectResponse(url="/employer/register")
-    
+
     posting = EmployerJobPosting(
         employer_id=employer.id,
         title=title,
@@ -130,6 +131,35 @@ async def post_job_submit(
     )
     db.add(posting)
     db.commit()
+
+    salary_text = ""
+    if salary_min and salary_max:
+        salary_text = f"Salary: ${salary_min:,.0f} - ${salary_max:,.0f} per year. "
+    elif salary_min:
+        salary_text = f"Salary: ${salary_min:,.0f} per year. "
+
+    posting_text = f"{title}. {description} {salary_text}Location: {location or 'Not specified'}. Job type: {job_type or 'Not specified'}."
+
+    try:
+        report = await score_posting(
+            posting_text=posting_text,
+            company_name=employer.company_name,
+            domain=employer.company_domain,
+            claimed_country=employer.company_country or "us",
+            phone=employer.company_phone,
+            ip=request.client.host,
+        )
+
+        posting.verification_score = report.overall_score
+        posting.verification_status = (
+            "pass" if report.overall_score >= 0.6
+            else "warn" if report.overall_score >= 0.4
+            else "fail"
+        )
+        db.commit()
+    except Exception:
+        pass
+
     return RedirectResponse(url="/employer/dashboard", status_code=303)
 
 @router.get("/posting/{posting_id}/edit")
