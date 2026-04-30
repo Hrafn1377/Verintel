@@ -1,7 +1,9 @@
 import httpx
 import phonenumbers
+import os
 from phonenumbers import geocoder
 from scoring.models import ScoreSignal, Verdict
+
 
 COUNTRY_CODE_MAP = {
     "us": ["us"],
@@ -190,6 +192,75 @@ def check_phone_country(phone: str, claimed_country: str) -> ScoreSignal:
             reason="Could not parse phone number to verify country.",
             source="Phone check"
         )
+    
+
+async def check_voip(phone: str) -> ScoreSignal:
+    api_key = os.getenv("APILAYER_KEY")
+    if not api_key:
+        return ScoreSignal(
+            label="VOIP detection",
+            verdict=Verdict.PASS,
+            weight=0.2,
+            score=0.8,
+            reason="VOIP detection could not be completed. Manual review recommnded.",
+            source="VOIP check"
+        )
+    
+    phone_clean = phone.strip().replace(" ", "").replace("-", "")
+
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"https://api.apilayer.com/number_verification/validate",
+                params={"number": phone_clean},
+                headers={"apikey": api_key},
+                timeout=5.0
+            )
+            data = response.json()
+
+        line_type = data.get("line_type", "").lower()
+        valid = data.get("valid", False)
+        carrier = data.get("carrier", "Unknown")
+        country_code = data.get("country_code", "").lower()
+
+        if not valid:
+            return ScoreSignal(
+                label="VOIP detection",
+                verdict=Verdict.WARN,
+                weight=0.2,
+                score=0.3,
+                reason="Phone number could not be validated",
+                source="VOIP check"
+            )
+        
+        if line_type in ("voip", "virtual"):
+            return ScoreSignal(
+                label="VOIP detection",
+                verdict=Verdict.FAIL,
+                weight=0.2,
+                score=0.0,
+                reason=f"Phone number is a VOIP or virtual number (carrier: {carrier}). Scammers commonly use virtual numbers to appear local while operating overseas.",
+                source="VOIP check"
+            )
+
+        return ScoreSignal(
+            label="VOIP detection",
+            verdict=Verdict.PASS,
+            weight=0.2,
+            score=1.0,
+            reason=f"Phone number appears to be a legitimate {line_type} line (carrier: {carrier}).",
+            source="VOIP check"
+        )
+
+    except Exception:
+        return ScoreSignal(
+            label="VOIP detection",
+            verdict=Verdict.PASS,
+            weight=0.2,
+            score=0.8,
+            reason="VOIP detection check could not be completed. Manual review recommended.",
+            source="VOIP check"
+        )
 
 async def run_location_checks(
     claimed_country: str,
@@ -207,6 +278,7 @@ async def run_location_checks(
 
     if phone:
         signals.append(check_phone_country(phone, claimed_country))
+        signals.append(await check_voip(phone))
 
     if not signals:
         return [ScoreSignal(

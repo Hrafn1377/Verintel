@@ -21,6 +21,7 @@ def detect_fraud_patterns(report: TrustReport) -> TrustReport:
     salary_transparency = signals_by_label.get("Salary transparency")
     currency_conversion = signals_by_label.get("Currency conversion check")
     phone_country = signals_by_label.get("Phone country")
+    voip_detection = signals_by_label.get("VOIP detection")
 
     fraud_indicators = []
 
@@ -47,6 +48,9 @@ def detect_fraud_patterns(report: TrustReport) -> TrustReport:
 
     if phone_country and phone_country.verdict == Verdict.WARN:
         fraud_indicators.append("phone number country mismatch")
+
+    if voip_detection and voip_detection.verdict == Verdict.FAIL:
+        fraud_indicators.append("VOIP or virtual phone number detected")
     
     if len(fraud_indicators) >= 3:
         report.signals.append(ScoreSignal(
