@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Float, JSON, DateTime, Boolean, Text, ForeignKey
+from sqlalchemy import Column, String, Float, JSON, DateTime, Boolean, Text, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from db.session import Base
@@ -193,3 +193,73 @@ class EmployerJobPosting(Base):
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     employer = relationship("Employer", back_populates="job_postings")
+
+
+    class Discussion(Base):
+        __tablename__ = "discussions"
+
+        id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+        user_id = Column(String, ForeignKey("users.id"), nullable=False)
+        title = Column(String, nullable=False)
+        body = Column(Text, nullable=False)
+        category = Column(String, nullable=False, default="general")
+        upvotes = Column(Integer, default=0)
+        is_pinned = Column(Boolean, default=False)
+        created_at = Column(DateTime, server_default=func.now())
+        updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+        user = relationship("User", backref="discussions")
+        replies = relationship("DiscussionReply", back_populates="discussion")
+
+
+class DiscussionReply(Base):
+    __tablename__ = "discussion_replies"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False)
+    title = Column(String, nullable=False)
+    body = Column(Text, nullable=False)
+    upvotes = Column(Integer, default=0)
+    created_at = Column(DateTime, server_defatult=func.now())
+
+    user = relationship("User", backref="discussion_replies")
+    discussion = relationship("Discussion", back_populates="replies")
+
+
+class SuccessStory(Base):
+    __tablename__ = "success_stories"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False)
+    title = Column(String, nullable=False)
+    body = Column(Text, nullable=False)
+    company = Column(String, nullable=True)
+    role = Column(String, nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
+
+    user = relationship("User", backref="success_stories")
+
+
+class InterviewExperience(Base):
+    __tablename__ = "interview_experiences"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False)
+    company = Column(String, nullable=False)
+    role = Column(String, nullable=False)
+    difficulty = Column(String, nullable=True)
+    questions = Column(Text, nullable=True)
+    outcome = Column(String, nullable=True)
+    body = Column(Text, nullable=False)
+    created_at = Column(DateTime, server_default=func.now())
+
+    user = relationship("User", backref="interview_experiences")
+
+
+class UserFollow(Base):
+    __tablename__ = "user_follows"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    follower_id = Column(String, ForeignKey("users.id"), nullable=False)
+    following_id = Column(String, ForeignKey("users.id"), nullable=False)
+    created_at = Column(DateTime, server_default=func.now())
