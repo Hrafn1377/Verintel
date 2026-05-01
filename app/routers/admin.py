@@ -43,13 +43,14 @@ async def admin_dashboard(
             "user": current_user,
             "total_users": total_users,
             "total_employers": total_employers,
-            "total_postings": flagged_postings,
+            "total_postings": total_postings,
+            "flagged_postings": flagged_postings,
             "unread_contacts": unread_contacts,
         }
     )
 
 
-@router.get("/contact")
+@router.get("/contacts")
 async def admin_contacts(
     request: Request,
     db: Session = Depends(get_db),
