@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Discussions — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="index, follow">{% endblock %}
+
+{% block content %}
+<div class="discussions-page">
+    <div class="discussions-header">
+        <div>
+            <h1>Discussions</h1>
+            <p>Job advice, interview prep, networking and more.</p>
+        </div>
+        {% if user %}
+        <a href="/discussions/new" class="btn">Start a Discussion</a>
+        {% endif %}
+    </div>
+
+    <div class="discussions-categories">
+        <a href="/discussions" class="category-tag {% if not active_category %}category-tag--active{% endif %}">All</a>
+        {% for cat in categories %}
+        <a href="/discussions?category={{ cat }}" class="category-tag {% if active_category == cat %}category-tag--active{% endif %}">{{ cat | replace('-', ' ') | title }}</a>
+        {% endfor %}
+    </div>
+
+    {% if not discussions %}
+    <div class="empty-state">
+        <p>No discussions yet. Be the first to start one.</p>
+        {% if user %}
+        <a href="/discussions/new" class="btn">Start a Discussion</a>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="discussions-list">
+        {% for discussion in discussions %}
+        <a href="/discussions/{{ discussion.id }}" class="discussion-card">
+            <div class="discussion-card-header">
+                <div>
+                    <span class="category-tag">{{ discussion.category | replace('-', ' ') | title }}</span>
+                    {% if discussion.is_pinned %}
+                    <span class="score-badge score-badge--pass">Pinned</span>
+                    {% endif %}
+                </div>
+            </div>
+            <h2 class="discussion-title">{{ discussion.title }}</h2>
+            <p class="discussion-preview">{{ discussion.body[:150] }}{% if discussion.body|length > 150 %}...{% endif %}</p>
+            <div class="discussion-meta">
+                <span>{{ discussion.user.profile.display_name if discussion.user.profile and discussion.user.profile.display_name else discussion.user.email.split('@')[0] }}</span>
+                <span>{{ discussion.created_at.strftime("%b %d, %Y") }}</span>
+                <span>{{ discussion.replies | length }} replies</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

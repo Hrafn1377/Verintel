@@ -195,21 +195,21 @@ class EmployerJobPosting(Base):
     employer = relationship("Employer", back_populates="job_postings")
 
 
-    class Discussion(Base):
-        __tablename__ = "discussions"
+class Discussion(Base):
+    __tablename__ = "discussions"
 
-        id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-        user_id = Column(String, ForeignKey("users.id"), nullable=False)
-        title = Column(String, nullable=False)
-        body = Column(Text, nullable=False)
-        category = Column(String, nullable=False, default="general")
-        upvotes = Column(Integer, default=0)
-        is_pinned = Column(Boolean, default=False)
-        created_at = Column(DateTime, server_default=func.now())
-        updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False)
+    title = Column(String, nullable=False)
+    body = Column(Text, nullable=False)
+    category = Column(String, nullable=False, default="general")
+    upvotes = Column(Integer, default=0)
+    is_pinned = Column(Boolean, default=False)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
-        user = relationship("User", backref="discussions")
-        replies = relationship("DiscussionReply", back_populates="discussion")
+    user = relationship("User", backref="discussions")
+    replies = relationship("DiscussionReply", back_populates="discussion")
 
 
 class DiscussionReply(Base):
@@ -220,7 +220,7 @@ class DiscussionReply(Base):
     title = Column(String, nullable=False)
     body = Column(Text, nullable=False)
     upvotes = Column(Integer, default=0)
-    created_at = Column(DateTime, server_defatult=func.now())
+    created_at = Column(DateTime, server_default=func.now())
 
     user = relationship("User", backref="discussion_replies")
     discussion = relationship("Discussion", back_populates="replies")

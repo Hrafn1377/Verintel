@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}{{ discussion.title }} — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="index, follow">{% endblock %}
+
+{% block content %}
+<div class="discussions-page">
+    <div class="discussions-header">
+        <a href="/discussions" class="btn-secondary">← Back to Discussions</a>
+    </div>
+
+    <div class="discussion-post">
+        <div class="discussion-post-header">
+            <div>
+                <span class="category-tag">{{ discussion.category | replace('-', ' ') | title }}</span>
+                {% if discussion.is_pinned %}
+                <span class="score-badge score-badge--pass">Pinned</span>
+                {% endif %}
+            </div>
+            <h1>{{ discussion.title }}</h1>
+            <div class="discussion-meta">
+                <span>{{ discussion.user.profile.display_name if discussion.user.profile and discussion.user.profile.display_name else discussion.user.email.split('@')[0] }}</span>
+                <span>{{ discussion.created_at.strftime("%b %d, %Y") }}</span>
+            </div>
+        </div>
+        <div class="discussion-post-body">
+            <p>{{ discussion.body }}</p>
+        </div>
+    </div>
+
+    <div class="discussion-replies">
+        <h2>{{ replies | length }} {% if replies | length == 1 %}Reply{% else %}Replies{% endif %}</h2>
+
+        {% if not replies %}
+        <div class="empty-state">
+            <p>No replies yet. Be the first to respond.</p>
+        </div>
+        {% else %}
+        {% for reply in replies %}
+        <div class="discussion-reply">
+            <div class="discussion-reply-header">
+                <span class="discussion-reply-author">{{ reply.user.profile.display_name if reply.user.profile and reply.user.profile.display_name else reply.user.email.split('@')[0] }}</span>
+                <span class="discussion-reply-date">{{ reply.created_at.strftime("%b %d, %Y") }}</span>
+            </div>
+            <p class="discussion-reply-body">{{ reply.body }}

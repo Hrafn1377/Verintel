@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}New Discussion — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="discussions-page">
+    <div class="discussions-header">
+        <div>
+            <h1>Start a Discussion</h1>
+            <p>Share advice, ask questions, or connect with others.</p>
+        </div>
+        <a href="/discussions" class="btn-secondary">← Back</a>
+    </div>
+
+    <div class="discussion-form-card">
+        <form method="POST" action="/discussions/new">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" placeholder="What's on your mind?" required>
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    {% for cat in categories %}
+                    <option value="{{ cat }}">{{ cat | replace('-', ' ') | title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="body">Post</label>
+                <textarea id="body" name="body" rows="8" placeholder="Share your thoughts, questions, or advice..." required></textarea>
+            </div>
+            <button type="submit" class="btn">Post Discussion</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
