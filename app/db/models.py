@@ -238,7 +238,7 @@ class SuccessStory(Base):
     created_at = Column(DateTime, server_default=func.now())
 
     user = relationship("User", backref="success_stories")
-    
+
 
 class InterviewExperience(Base):
     __tablename__ = "interview_experiences"

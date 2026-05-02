@@ -42,4 +42,26 @@
                 <span class="discussion-reply-author">{{ reply.user.profile.display_name if reply.user.profile and reply.user.profile.display_name else reply.user.email.split('@')[0] }}</span>
                 <span class="discussion-reply-date">{{ reply.created_at.strftime("%b %d, %Y") }}</span>
             </div>
-            <p class="discussion-reply-body">{{ reply.body }}
+            <p class="discussion-reply-body">{{ reply.body }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+    {% if user %}
+    <div class="discussion-reply-form">
+        <h2>Leave a Reply</h2>
+        <form method="POST" action="/discussions/{{ discussion.id }}/reply">
+            <div class="form-group">
+                <textarea name="body" rows="4" placeholder="Share your thoughts..." required></textarea>
+            </div>
+            <button type="submit" class="btn">Post Reply</button>
+        </form>
+    </div>
+    {% else %}
+    <div class="discussion-reply-form">
+        <p><a href="/auth/login">Sign in</a> to leave a reply.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

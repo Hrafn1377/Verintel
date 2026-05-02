@@ -59,7 +59,7 @@ async def create_discussion(
     current_user=Depends(get_optional_user),
     title: str = Form(...),
     body: str = Form(...),
-    category: str = ("general"),
+    category: str = Form("general"),
 ):
     if not current_user:
         return RedirectResponse(url="/auth/login")
@@ -87,7 +87,7 @@ async def view_discussion(
         return RedirectResponse(url="/discussions")
     
     replies = db.query(DiscussionReply).filter(
-        DiscussionReply.discussion.id == discussion_id
+        DiscussionReply.discussion_id == discussion_id
     ).order_by(DiscussionReply.created_at.asc()).all()
 
     return templates.TemplateResponse(
