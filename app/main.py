@@ -21,6 +21,7 @@ from routers.employer import router as employer_router
 from urllib.parse import quote
 from routers.admin import router as admin_router
 from routers.discussions import router as discussions_router
+from routers.success_stories import router as success_stories_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -61,6 +62,7 @@ app.include_router(discover_router)
 app.include_router(employer_router)
 app.include_router(admin_router)
 app.include_router(discussions_router)
+app.include_router(success_stories_router)
 
 
 @app.get("/")

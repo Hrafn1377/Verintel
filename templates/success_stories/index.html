@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Success Stories — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="index, follow">{% endblock %}
+
+{% block content %}
+<div class="stories-page">
+    <div class="stories-header">
+        <div>
+            <h1>Success Stories</h1>
+            <p>Job seekers sharing their wins. Get inspired.</p>
+        </div>
+        {% if user %}
+        <a href="/success-stories/new" class="btn">Share Your Story</a>
+        {% endif %}
+    </div>
+
+    {% if not stories %}
+    <div class="empty-state">
+        <p>No success stories yet. Be the first to share yours.</p>
+        {% if user %}
+        <a href="/success-stories/new" class="btn">Share Your Story</a>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="stories-list">
+        {% for story in stories %}
+        <a href="/success-stories/{{ story.id }}" class="story-card">
+            <h2 class="story-title">{{ story.title }}</h2>
+            {% if story.company or story.role %}
+            <div class="story-details">
+                {% if story.role %}<span>{{ story.role }}</span>{% endif %}
+                {% if story.company %}<span>at {{ story.company }}</span>{% endif %}
+            </div>
+            {% endif %}
+            <p class="story-preview">{{ story.body[:150] }}{% if story.body|length > 150 %}...{% endif %}</p>
+            <div class="discussion-meta">
+                <span>{{ story.user.profile.display_name if story.user.profile and story.user.profile.display_name else story.user.email.split('@')[0] }}</span>
+                <span>{{ story.created_at.strftime("%b %d, %Y") }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

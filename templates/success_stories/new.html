@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Share Your Story — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="stories-page">
+    <div class="stories-header">
+        <div>
+            <h1>Share Your Story</h1>
+            <p>Inspire other job seekers with your success.</p>
+        </div>
+        <a href="/success-stories" class="btn-secondary">← Back</a>
+    </div>
+
+    <div class="discussion-form-card">
+        <form method="POST" action="/success-stories/new">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" placeholder="e.g. Finally landed my dream job after 6 months" required>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <input type="text" id="role" name="role" placeholder="e.g. Senior Developer">
+                </div>
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company" placeholder="e.g. Acme Corp">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="body">Your Story</label>
+                <textarea id="body" name="body" rows="8" placeholder="Share what worked, what didn't, and any advice for others..." required></textarea>
+            </div>
+            <button type="submit" class="btn">Share Story</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

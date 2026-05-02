@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ story.title }} — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="index, follow">{% endblock %}
+
+{% block content %}
+<div class="stories-page">
+    <div class="stories-header">
+        <a href="/success-stories" class="btn-secondary">← Back to Success Stories</a>
+    </div>
+
+    <div class="discussion-post">
+        <div class="discussion-post-header">
+            {% if story.role or story.company %}
+            <div class="story-details">
+                {% if story.role %}<span>{{ story.role }}</span>{% endif %}
+                {% if story.company %}<span>at {{ story.company }}</span>{% endif %}
+            </div>
+            {% endif %}
+            <h1>{{ story.title }}</h1>
+            <div class="discussion-meta">
+                <span>{{ story.user.profile.display_name if story.user.profile and story.user.profile.display_name else story.user.email.split('@')[0] }}</span>
+                <span>{{ story.created_at.strftime("%b %d, %Y") }}</span>
+            </div>
+        </div>
+        <div class="discussion-post-body">
+            <p>{{ story.body }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
