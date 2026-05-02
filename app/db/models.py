@@ -216,8 +216,8 @@ class DiscussionReply(Base):
     __tablename__ = "discussion_replies"
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    discussion_id = Column(String, ForeignKey("discussions.id"), nullable=False)
     user_id = Column(String, ForeignKey("users.id"), nullable=False)
-    title = Column(String, nullable=False)
     body = Column(Text, nullable=False)
     upvotes = Column(Integer, default=0)
     created_at = Column(DateTime, server_default=func.now())
@@ -238,7 +238,7 @@ class SuccessStory(Base):
     created_at = Column(DateTime, server_default=func.now())
 
     user = relationship("User", backref="success_stories")
-
+    
 
 class InterviewExperience(Base):
     __tablename__ = "interview_experiences"
