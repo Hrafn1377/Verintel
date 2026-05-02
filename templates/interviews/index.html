@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Interview Experiences — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="index, follow">{% endblock %}
+
+{% block content %}
+<div class="interviews-page">
+    <div class="interviews-header">
+        <div>
+            <h1>Interview Experiences</h1>
+            <p>Real interview experiences from the community. Know what to expect.</p>
+        </div>
+        {% if user %}
+        <a href="/interviews/new" class="btn">Share Experience</a>
+        {% endif %}
+    </div>
+
+    {% if not experiences %}
+    <div class="empty-state">
+        <p>No interview experiences shared yet. Be the first.</p>
+        {% if user %}
+        <a href="/interviews/new" class="btn">Share Experience</a>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="interviews-list">
+        {% for experience in experiences %}
+        <a href="/interviews/{{ experience.id }}" class="interview-card">
+            <div class="interview-card-header">
+                <div>
+                    <h2 class="interview-title">{{ experience.role }} at {{ experience.company }}</h2>
+                </div>
+                <div class="interview-card-meta">
+                    {% if experience.difficulty %}
+                    <span class="score-badge">{{ experience.difficulty }}</span>
+                    {% endif %}
+                    {% if experience.outcome %}
+                    <span class="score-badge {% if experience.outcome == 'Got the job' %}score-badge--pass{% elif experience.outcome == 'Rejected' %}score-badge--fail{% else %}score-badge--warn{% endif %}">{{ experience.outcome }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <p class="interview-preview">{{ experience.body[:150] }}{% if experience.body|length > 150 %}...{% endif %}</p>
+            <div class="discussion-meta">
+                <span>{{ experience.user.profile.display_name if experience.user.profile and experience.user.profile.display_name else experience.user.email.split('@')[0] }}</span>
+                <span>{{ experience.created_at.strftime("%b %d, %Y") }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

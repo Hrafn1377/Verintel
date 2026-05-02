@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Share Interview Experience — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="interviews-page">
+    <div class="interviews-header">
+        <div>
+            <h1>Share Interview Experience</h1>
+            <p>Help others know what to expect.</p>
+        </div>
+        <a href="/interviews" class="btn-secondary">← Back</a>
+    </div>
+
+    <div class="discussion-form-card">
+        <form method="POST" action="/interviews/new">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company" placeholder="e.g. Acme Corp" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <input type="text" id="role" name="role" placeholder="e.g. Software Engineer" required>
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="difficulty">Difficulty</label>
+                    <select id="difficulty" name="difficulty">
+                        <option value="">Select difficulty</option>
+                        {% for level in difficulty_levels %}
+                        <option value="{{ level }}">{{ level }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="outcome">Outcome</label>
+                    <select id="outcome" name="outcome">
+                        <option value="">Select outcome</option>
+                        {% for outcome in outcomes %}
+                        <option value="{{ outcome }}">{{ outcome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="questions">Interview Questions</label>
+                <textarea id="questions" name="questions" rows="4" placeholder="What questions were you asked? Share as many as you can remember..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="body">Your Experience</label>
+                <textarea id="body" name="body" rows="6" placeholder="Describe the interview process, what to expect, any tips..." required></textarea>
+            </div>
+            <button type="submit" class="btn">Share Experience</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

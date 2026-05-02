@@ -2314,3 +2314,97 @@ footer {
     line-height: 1.5;
     margin-bottom: 0.75rem;
 }
+
+/* interview experiences */
+.interviews-page {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.interviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.interviews-header h1 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.interviews-header p {
+    color: var(--color-text-muted);
+}
+
+.interviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.interview-card {
+    background: var(--color-surface);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    text-decoration: none;
+    color: var(--color-text);
+    display: block;
+}
+
+.interview-card:hover {
+    background: var(--color-bg);
+}
+
+.interview-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+    gap: 1rem;
+}
+
+.interview-card-meta {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.interview-title {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+}
+
+.interview-preview {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+}
+
+.interview-questions {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 0.5px solid var(--color-border);
+}
+
+.interview-questions h3,
+.interview-experience-body h3 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+}
+
+.interview-questions p,
+.interview-experience-body p {
+    font-size: 15px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
