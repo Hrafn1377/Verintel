@@ -23,6 +23,7 @@ from routers.admin import router as admin_router
 from routers.discussions import router as discussions_router
 from routers.success_stories import router as success_stories_router
 from routers.interview import router as interview_router
+from routers.network import router as network_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -65,6 +66,7 @@ app.include_router(admin_router)
 app.include_router(discussions_router)
 app.include_router(success_stories_router)
 app.include_router(interview_router)
+app.include_router(network_router)
 
 
 @app.get("/")

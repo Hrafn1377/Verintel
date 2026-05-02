@@ -2408,3 +2408,97 @@ footer {
     line-height: 1.7;
     white-space: pre-wrap;
 }
+
+/* network */
+.network-page {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.network-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.network-header h1 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.network-header p {
+    color: var(--color-text-muted);
+}
+
+.network-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.network-stat {
+    background: var(--color-surface);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    text-align: center;
+}
+
+.network-stat-number {
+    display: block;
+    font-size: 32px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.network-stat-label {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.network-section {
+    margin-bottom: 2rem;
+}
+
+.network-section h2 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.network-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.network-card {
+    background: var(--color-surface);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.network-card-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.network-card-name {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.network-card-headline {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}

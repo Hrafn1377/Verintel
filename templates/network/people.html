@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Find People — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="network-page">
+    <div class="network-header">
+        <div>
+            <h1>Find People</h1>
+            <p>Connect with other job seekers and professionals.</p>
+        </div>
+        <a href="/network" class="btn-secondary">← My Network</a>
+    </div>
+
+    {% if not users %}
+    <div class="empty-state">
+        <p>No other users yet.</p>
+    </div>
+    {% else %}
+    <div class="network-list">
+        {% for person in users %}
+        <div class="network-card">
+            <div class="network-card-info">
+                <div class="profile-avatar" style="width:40px;height:40px;font-size:16px;">
+                    {{ person.profile.display_name[0].upper() if person.profile and person.profile.display_name else person.email[0].upper() }}
+                </div>
+                <div>
+                    <p class="network-card-name">{{ person.profile.display_name if person.profile and person.profile.display_name else person.email.split('@')[0] }}</p>
+                    {% if person.profile and person.profile.headline %}
+                    <p class="network-card-headline">{{ person.profile.headline }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% if user %}
+                {% if person.id in following_ids %}
+                <form method="POST" action="/network/unfollow/{{ person.id }}">
+                    <button type="submit" class="btn-secondary">Unfollow</button>
+                </form>
+                {% else %}
+                <form method="POST" action="/network/follow/{{ person.id }}">
+                    <button type="submit" class="btn">Follow</button>
+                </form>
+                {% endif %}
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

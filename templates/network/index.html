@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}My Network — Verintel{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="network-page">
+    <div class="network-header">
+        <div>
+            <h1>My Network</h1>
+            <p>People you follow and people following you.</p>
+        </div>
+        <a href="/network/people" class="btn">Find People</a>
+    </div>
+
+    <div class="network-stats">
+        <div class="network-stat">
+            <span class="network-stat-number">{{ following | length }}</span>
+            <span class="network-stat-label">Following</span>
+        </div>
+        <div class="network-stat">
+            <span class="network-stat-number">{{ followers | length }}</span>
+            <span class="network-stat-label">Followers</span>
+        </div>
+    </div>
+
+    {% if not following %}
+    <div class="empty-state">
+        <p>You are not following anyone yet.</p>
+        <a href="/network/people" class="btn">Find People</a>
+    </div>
+    {% else %}
+    <div class="network-section">
+        <h2>Following</h2>
+        <div class="network-list">
+            {% for follow in following %}
+            <div class="network-card">
+                <div class="network-card-info">
+                    <div class="profile-avatar" style="width:40px;height:40px;font-size:16px;">
+                        {{ follow.following.profile.display_name[0].upper() if follow.following.profile and follow.following.profile.display_name else follow.following.email[0].upper() }}
+                    </div>
+                    <div>
+                        <p class="network-card-name">{{ follow.following.profile.display_name if follow.following.profile and follow.following.profile.display_name else follow.following.email.split('@')[0] }}</p>
+                        {% if follow.following.profile and follow.following.profile.headline %}
+                        <p class="network-card-headline">{{ follow.following.profile.headline }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <form method="POST" action="/network/unfollow/{{ follow.following_id }}">
+                    <button type="submit" class="btn-secondary">Unfollow</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
