@@ -24,6 +24,9 @@ from routers.discussions import router as discussions_router
 from routers.success_stories import router as success_stories_router
 from routers.interview import router as interview_router
 from routers.network import router as network_router
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 Base.metadata.create_all(bind=engine)
 
@@ -49,10 +52,10 @@ app.add_middleware(SecurityHeadersMiddleware)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 templates.env.auto_reload = True
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 app.include_router(verification_router)
 app.include_router(jobs_router)
 app.include_router(auth_router)
